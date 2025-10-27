@@ -16,7 +16,6 @@ class User(Base, BaseModel):
     is_superuser = Column(Boolean, default=False)
 
     # Relacionamentos
-    vehicles = relationship("Vehicle", back_populates="owner", cascade="all, delete-orphan")
     conversations = relationship("Conversation", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):

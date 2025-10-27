@@ -79,30 +79,28 @@ class Plate(Base, BaseModel):
 
 
 class Vehicle(Base, BaseModel):
-    """Veículo do usuário"""
+    """Veículo"""
 
     __tablename__ = "vehicles"
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     brand_id = Column(UUID(as_uuid=True), ForeignKey("brands.id"), nullable=False)
     model_id = Column(UUID(as_uuid=True), ForeignKey("models.id"), nullable=False)
     version_id = Column(UUID(as_uuid=True), ForeignKey("model_versions.id"), nullable=True)
-    color_id = Column(UUID(as_uuid=True), ForeignKey("colors.id"), nullable=True)
-
-    year = Column(Integer, nullable=True)
-    nickname = Column(String, nullable=True)  # Apelido do carro
-    is_active = Column(Boolean, default=True)
+    category_id = Column(UUID(as_uuid=True), nullable=False)
+    chassis = Column(String, nullable=False, unique=True, index=True)
+    model_year = Column(Integer, nullable=False)
+    manufacture_year = Column(Integer, nullable=False)
+    active = Column(Boolean, default=True)
 
     # Relacionamentos
-    owner = relationship("User", back_populates="vehicles")
-    brand = relationship("Brand")
-    model = relationship("Model")
-    version = relationship("ModelVersion")
-    color = relationship("Color")
+    brands = relationship("Brand")
+    models = relationship("Model")
+    model_versions = relationship("ModelVersion")
     plates = relationship("Plate", back_populates="vehicle", cascade="all, delete-orphan")
-    fuelings = relationship("Fueling", back_populates="vehicle", cascade="all, delete-orphan")
-    maintenances = relationship("Maintenance", back_populates="vehicle", cascade="all, delete-orphan")
+    colors = relationship("Color", back_populates="vehicle", cascade="all, delete-orphan")
     conversations = relationship("Conversation", back_populates="vehicle", cascade="all, delete-orphan")
+    moments = relationship("Moment", back_populates="vehicle", cascade="all, delete-orphan")
+    entity_links = relationship("VehicleEntityLink", back_populates="vehicle", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Vehicle {self.brand.brand if self.brand else ''} {self.model.model if self.model else ''}>"
+        return f"<Vehicle {self.brands.brand if self.brands else ''} {self.models.model if self.models else ''}>"
