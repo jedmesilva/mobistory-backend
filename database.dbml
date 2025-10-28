@@ -1,0 +1,761 @@
+Table "alembic_version" {
+  "version_num" varchar(32) [pk, not null]
+}
+
+Table "entity_types" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "code" varchar [unique, not null]
+  "name" varchar [not null]
+  "description" text
+  "requires_cpf" bool
+  "requires_cnpj" bool
+  "requires_special_id" bool
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "entities" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "entity_code" varchar [unique, not null]
+  "entity_type_id" uuid
+  "legal_id_number" varchar [unique]
+  "global_key_hash" varchar
+  "display_name" varchar [not null]
+  "email" varchar
+  "phone" varchar
+  "profile_picture_url" text
+  "metadata" jsonb
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    entity_code [type: btree, name: "idx_entities_entity_code"]
+    legal_id_number [type: btree, name: "idx_entities_legal_id_number"]
+  }
+}
+
+Table "brands" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "name" varchar [not null]
+  "country_of_origin" varchar
+  "logo_url" text
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "models" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "brand_id" uuid
+  "name" varchar [not null]
+  "category" varchar
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "model_versions" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "model_id" uuid
+  "name" varchar [not null]
+  "start_year" int4
+  "end_year" int4
+  "fuel_type" varchar
+  "transmission" varchar
+  "drive_type" varchar
+  "engine_displacement" numeric
+  "engine_power" int4
+  "doors" int4
+  "seats" int4
+  "weight_kg" int4
+  "tank_capacity_liters" int4
+  "trunk_capacity_liters" int4
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "vehicles" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "vin" varchar [unique]
+  "renavam" varchar [unique]
+  "brand_id" uuid
+  "model_id" uuid
+  "version_id" uuid
+  "custom_brand" varchar
+  "custom_model" varchar
+  "custom_version" varchar
+  "manufacturing_year" int4
+  "model_year" int4
+  "current_color" varchar
+  "current_plate" varchar
+  "current_km" int4
+  "visibility" varchar
+  "observations" text
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    current_plate [type: btree, name: "idx_vehicles_current_plate"]
+    renavam [type: btree, name: "idx_vehicles_renavam"]
+    vin [type: btree, name: "idx_vehicles_vin"]
+  }
+}
+
+Table "link_types" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "code" varchar [unique, not null]
+  "name" varchar [not null]
+  "description" text
+  "permissions" jsonb
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "links" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "link_code" varchar [unique, not null]
+  "entity_id" uuid
+  "vehicle_id" uuid
+  "link_type_id" uuid
+  "own_key_hash" varchar
+  "uses_own_key" bool
+  "status" varchar
+  "document_proof" text
+  "validated_at" timestamptz
+  "validated_by" uuid
+  "start_date" date
+  "end_date" date
+  "observations" text
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    (entity_id, vehicle_id) [type: btree, name: "idx_links_entity_vehicle"]
+    link_code [type: btree, name: "idx_links_link_code"]
+    status [type: btree, name: "idx_links_status"]
+  }
+}
+
+Table "link_status" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "link_id" uuid
+  "from_status" varchar
+  "to_status" varchar [not null]
+  "changed_by_entity_id" uuid
+  "changed_by_link_id" uuid
+  "reason" text
+  "metadata" jsonb
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "vehicle_claims" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "vehicle_id" uuid
+  "link_id" uuid
+  "claim_type" varchar
+  "severity" varchar
+  "claim_date" timestamptz
+  "claim_km" int4
+  "location_lat" numeric
+  "location_lng" numeric
+  "address" text
+  "police_report" varchar
+  "police_report_url" text
+  "insurance_company" varchar
+  "claim_number" varchar
+  "policy" varchar
+  "insurance_status" varchar
+  "indemnity_value" numeric
+  "tow_truck_called" bool
+  "tow_truck_company" varchar
+  "involved_third_parties" jsonb
+  "description" text
+  "photos_urls" text
+  "total_repair_cost" numeric
+  "status" varchar
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+}
+
+Table "fuel_types" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "code" varchar [unique, not null]
+  "name" varchar [not null]
+  "description" text
+  "unit" varchar
+  "hex_color" varchar
+  "icon" varchar
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "flags" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "code" varchar [unique, not null]
+  "name" varchar [not null]
+  "logo_url" text
+  "country_of_origin" varchar
+  "website" varchar
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "fuel_stations" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "name" varchar [not null]
+  "cnpj" varchar
+  "location_lat" numeric
+  "location_lng" numeric
+  "address" text
+  "city" varchar
+  "state" varchar
+  "postal_code" varchar
+  "country" varchar
+  "phone" varchar
+  "email" varchar
+  "website" varchar
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+}
+
+Table "fuel_station_flags" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "station_id" uuid
+  "flag_id" uuid
+  "start_date" date
+  "end_date" date
+  "observations" text
+  "registered_by_entity_id" uuid
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "station_fuels" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "station_id" uuid
+  "fuel_type_id" uuid
+  "start_date" date
+  "end_date" date
+  "status" varchar
+  "observations" text
+  "registered_by_entity_id" uuid
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+}
+
+Table "station_fuel_prices" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "station_fuel_id" uuid
+  "price" numeric [not null]
+  "effective_date" date [not null]
+  "end_date" date
+  "is_promotion" bool
+  "promotion_description" text
+  "reported_by_entity_id" uuid
+  "verified" bool
+  "verified_at" timestamptz
+  "verified_by_entity_id" uuid
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "fuel_station_hours" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "station_id" uuid
+  "day_of_week" int4
+  "opens_at" time
+  "closes_at" time
+  "is_24_hours" bool
+  "is_closed" bool
+  "start_date" date
+  "end_date" date
+  "observations" text
+  "registered_by_entity_id" uuid
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "fuel_station_operating_periods" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "station_id" uuid
+  "date" date [not null]
+  "first_activity_at" timestamptz
+  "last_activity_at" timestamptz
+  "total_refuels" int4
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+}
+
+Table "vehicle_refuels" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "vehicle_id" uuid
+  "link_id" uuid
+  "station_fuel_id" uuid
+  "fuel_type_id" uuid
+  "station_id" uuid
+  "refuel_date" timestamptz [not null]
+  "refuel_km" int4
+  "quantity" numeric [not null]
+  "unit_price" numeric
+  "total_price" numeric
+  "full_tank" bool
+  "invoice_url" text
+  "observations" text
+  "registered_by_link_id" uuid
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    refuel_date [type: btree, name: "idx_vehicle_refuels_date"]
+    vehicle_id [type: btree, name: "idx_vehicle_refuels_vehicle"]
+  }
+}
+
+Table "odometers" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "vehicle_id" uuid
+  "installation_date" timestamptz
+  "removal_date" timestamptz
+  "brand" varchar
+  "model" varchar
+  "part_number" varchar
+  "cost" numeric
+  "supplier" varchar
+  "invoice_url" text
+  "warranty_months" int4
+  "warranty_km" int4
+  "reason_for_change" text
+  "damage_type" varchar
+  "observations" text
+  "registered_by_link_id" uuid
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "mileage_records" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "odometer_id" uuid
+  "vehicle_id" uuid
+  "recorded_at" timestamptz [not null]
+  "mileage" int4 [not null]
+  "registered_by_link_id" uuid
+  "created_at" timestamptz [default: `now()`]
+
+  Indexes {
+    recorded_at [type: btree, name: "idx_mileage_records_date"]
+    vehicle_id [type: btree, name: "idx_mileage_records_vehicle"]
+  }
+}
+
+Table "conversation_contexts" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "code" varchar [unique, not null]
+  "category" varchar
+  "name" varchar [not null]
+  "description" text
+  "keywords" jsonb
+  "available_actions" jsonb
+  "ai_instructions" text
+  "requires_link" bool
+  "required_permissions" jsonb
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "conversations" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "conversation_code" varchar [unique, not null]
+  "primary_vehicle_id" uuid
+  "vehicle_ids" text
+  "conversation_type" varchar
+  "title" varchar
+  "summary" text
+  "status" varchar
+  "main_context_id" uuid
+  "total_participants" int4
+  "active_participants" int4
+  "total_messages" int4
+  "total_actions_executed" int4
+  "started_at" timestamptz
+  "last_message_at" timestamptz
+  "finished_at" timestamptz
+  "archived_at" timestamptz
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    conversation_code [type: btree, name: "idx_conversations_code"]
+    status [type: btree, name: "idx_conversations_status"]
+  }
+}
+
+Table "conversation_participants" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "conversation_id" uuid
+  "entity_id" uuid
+  "link_id" uuid
+  "role" varchar
+  "participant_type" varchar
+  "joined_at" timestamptz
+  "left_at" timestamptz
+  "is_active" bool
+  "invited_by_entity_id" uuid
+  "invited_by_participant_id" uuid
+  "invitation_reason" varchar
+  "removed_by_entity_id" uuid
+  "removal_reason" varchar
+  "permissions" jsonb
+  "context_summary_at_join" text
+  "auto_leave_config" jsonb
+  "notification_enabled" bool
+  "last_read_message_id" uuid
+  "last_read_at" timestamptz
+  "unread_count" int4
+  "metadata" jsonb
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+}
+
+Table "action_types" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "code" varchar [unique, not null]
+  "category" varchar
+  "name" varchar [not null]
+  "description" text
+  "icon" varchar
+  "color" varchar
+  "requires_execution" bool
+  "affects_database" bool
+  "affects_physical_vehicle" bool
+  "input_schema" jsonb
+  "output_schema" jsonb
+  "required_permissions" jsonb
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "actions" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "vehicle_id" uuid
+  "action_type_id" uuid
+  "created_by_entity_id" uuid
+  "created_by_link_id" uuid
+  "assigned_to_entity_id" uuid
+  "executed_by_entity_id" uuid
+  "executed_by_link_id" uuid
+  "source_type" varchar
+  "source_id" uuid
+  "conversation_id" uuid
+  "parent_action_id" uuid
+  "title" varchar
+  "description" text
+  "input_data" jsonb
+  "output_data" jsonb
+  "metadata" jsonb
+  "status" varchar
+  "priority" int4
+  "scheduled_for" timestamptz
+  "schedule_type" varchar
+  "recurrence_rule" text
+  "execution_order" int4
+  "depends_on_action_id" uuid
+  "batch_id" uuid
+  "is_atomic" bool
+  "started_at" timestamptz
+  "executed_at" timestamptz
+  "cancelled_at" timestamptz
+  "error_message" text
+  "retry_count" int4
+  "max_retries" int4
+  "affected_entities" jsonb
+  "rollback_data" jsonb
+  "requires_confirmation" bool
+  "confirmed_by_entity_id" uuid
+  "confirmed_at" timestamptz
+  "location_lat" numeric
+  "location_lng" numeric
+  "address" text
+  "estimated_cost" numeric
+  "actual_cost" numeric
+  "currency" varchar
+  "attachments_urls" text
+  "external_references" jsonb
+  "expires_at" timestamptz
+  "alert_before_hours" int4
+  "alerted_at" timestamptz
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    conversation_id [type: btree, name: "idx_actions_conversation"]
+    status [type: btree, name: "idx_actions_status"]
+    vehicle_id [type: btree, name: "idx_actions_vehicle"]
+  }
+}
+
+Table "action_status" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "action_id" uuid
+  "from_status" varchar
+  "to_status" varchar [not null]
+  "changed_by_entity_id" uuid
+  "reason" text
+  "metadata" jsonb
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "action_notes" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "action_id" uuid
+  "entity_id" uuid
+  "note_type" varchar
+  "content" text [not null]
+  "attachments_urls" text
+  "is_internal" bool
+  "created_at" timestamptz [default: `now()`]
+}
+
+Table "conversation_messages" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "conversation_id" uuid
+  "sender_entity_id" uuid
+  "sender_participant_id" uuid
+  "directed_to_entity_id" uuid
+  "directed_to_participant_id" uuid
+  "content" text [not null]
+  "message_type" varchar
+  "context_id" uuid
+  "context_confidence" numeric
+  "detected_intent" varchar
+  "extracted_entities" jsonb
+  "action_id" uuid
+  "action_executed" bool
+  "action_result" jsonb
+  "requires_confirmation" bool
+  "confirmed" bool
+  "confirmed_at" timestamptz
+  "confirmed_by_entity_id" uuid
+  "attachments_urls" text
+  "visible_to_participant_ids" text
+  "is_private" bool
+  "requires_user_interaction" bool
+  "interaction_reason" varchar
+  "auto_processed" bool
+  "processed" bool
+  "processed_at" timestamptz
+  "reactions" jsonb
+  "created_at" timestamptz [default: `now()`]
+
+  Indexes {
+    conversation_id [type: btree, name: "idx_conversation_messages_conversation"]
+  }
+}
+
+Table "plate_types" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "code" varchar [unique, not null]
+  "name" varchar [not null]
+  "description" text
+  "country" varchar [not null]
+  "format_pattern" varchar
+  "format_example" varchar
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    active [type: btree, name: "idx_plate_types_active"]
+    code [type: btree, name: "idx_plate_types_code"]
+    country [type: btree, name: "idx_plate_types_country"]
+  }
+}
+
+Table "plates" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "vehicle_id" uuid [not null]
+  "plate_type_id" uuid [not null]
+  "plate_number" varchar [not null]
+  "licensing_date" date
+  "licensing_country" varchar
+  "state" varchar
+  "city" varchar
+  "status" varchar
+  "end_date" date
+  "created_by_entity_id" uuid
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    active [type: btree, name: "idx_plates_active"]
+    licensing_date [type: btree, name: "idx_plates_licensing_date"]
+    plate_number [type: btree, name: "idx_plates_plate_number"]
+    status [type: btree, name: "idx_plates_status"]
+    vehicle_id [type: btree, name: "idx_plates_vehicle_id"]
+  }
+}
+
+Table "colors" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "vehicle_id" uuid [not null]
+  "color" varchar [not null]
+  "hex_code" varchar
+  "start_date" date
+  "end_date" date
+  "created_by_entity_id" uuid
+  "active" bool
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+  "description" text
+
+  Indexes {
+    active [type: btree, name: "idx_colors_active"]
+    color [type: btree, name: "idx_colors_color"]
+    start_date [type: btree, name: "idx_colors_start_date"]
+    vehicle_id [type: btree, name: "idx_colors_vehicle_id"]
+  }
+}
+
+Ref "action_notes_action_id_fkey":"actions"."id" < "action_notes"."action_id"
+
+Ref "action_notes_entity_id_fkey":"entities"."id" < "action_notes"."entity_id"
+
+Ref "action_status_action_id_fkey":"actions"."id" < "action_status"."action_id"
+
+Ref "action_status_changed_by_entity_id_fkey":"entities"."id" < "action_status"."changed_by_entity_id"
+
+Ref "actions_action_type_id_fkey":"action_types"."id" < "actions"."action_type_id"
+
+Ref "actions_assigned_to_entity_id_fkey":"entities"."id" < "actions"."assigned_to_entity_id"
+
+Ref "actions_confirmed_by_entity_id_fkey":"entities"."id" < "actions"."confirmed_by_entity_id"
+
+Ref "actions_conversation_id_fkey":"conversations"."id" < "actions"."conversation_id"
+
+Ref "actions_created_by_entity_id_fkey":"entities"."id" < "actions"."created_by_entity_id"
+
+Ref "actions_created_by_link_id_fkey":"links"."id" < "actions"."created_by_link_id"
+
+Ref "actions_depends_on_action_id_fkey":"actions"."id" < "actions"."depends_on_action_id"
+
+Ref "actions_executed_by_entity_id_fkey":"entities"."id" < "actions"."executed_by_entity_id"
+
+Ref "actions_executed_by_link_id_fkey":"links"."id" < "actions"."executed_by_link_id"
+
+Ref "actions_parent_action_id_fkey":"actions"."id" < "actions"."parent_action_id"
+
+Ref "actions_vehicle_id_fkey":"vehicles"."id" < "actions"."vehicle_id"
+
+Ref "colors_created_by_entity_id_fkey":"entities"."id" < "colors"."created_by_entity_id"
+
+Ref "colors_vehicle_id_fkey":"vehicles"."id" < "colors"."vehicle_id" [delete: cascade]
+
+Ref "conversation_messages_action_id_fkey":"actions"."id" < "conversation_messages"."action_id"
+
+Ref "conversation_messages_confirmed_by_entity_id_fkey":"entities"."id" < "conversation_messages"."confirmed_by_entity_id"
+
+Ref "conversation_messages_context_id_fkey":"conversation_contexts"."id" < "conversation_messages"."context_id"
+
+Ref "conversation_messages_conversation_id_fkey":"conversations"."id" < "conversation_messages"."conversation_id"
+
+Ref "conversation_messages_directed_to_entity_id_fkey":"entities"."id" < "conversation_messages"."directed_to_entity_id"
+
+Ref "conversation_messages_directed_to_participant_id_fkey":"conversation_participants"."id" < "conversation_messages"."directed_to_participant_id"
+
+Ref "conversation_messages_sender_entity_id_fkey":"entities"."id" < "conversation_messages"."sender_entity_id"
+
+Ref "conversation_messages_sender_participant_id_fkey":"conversation_participants"."id" < "conversation_messages"."sender_participant_id"
+
+Ref "conversation_participants_conversation_id_fkey":"conversations"."id" < "conversation_participants"."conversation_id"
+
+Ref "conversation_participants_entity_id_fkey":"entities"."id" < "conversation_participants"."entity_id"
+
+Ref "conversation_participants_invited_by_entity_id_fkey":"entities"."id" < "conversation_participants"."invited_by_entity_id"
+
+Ref "conversation_participants_invited_by_participant_id_fkey":"conversation_participants"."id" < "conversation_participants"."invited_by_participant_id"
+
+Ref "conversation_participants_link_id_fkey":"links"."id" < "conversation_participants"."link_id"
+
+Ref "conversation_participants_removed_by_entity_id_fkey":"entities"."id" < "conversation_participants"."removed_by_entity_id"
+
+Ref "conversations_main_context_id_fkey":"conversation_contexts"."id" < "conversations"."main_context_id"
+
+Ref "conversations_primary_vehicle_id_fkey":"vehicles"."id" < "conversations"."primary_vehicle_id"
+
+Ref "entities_entity_type_id_fkey":"entity_types"."id" < "entities"."entity_type_id"
+
+Ref "fuel_station_flags_flag_id_fkey":"flags"."id" < "fuel_station_flags"."flag_id"
+
+Ref "fuel_station_flags_registered_by_entity_id_fkey":"entities"."id" < "fuel_station_flags"."registered_by_entity_id"
+
+Ref "fuel_station_flags_station_id_fkey":"fuel_stations"."id" < "fuel_station_flags"."station_id"
+
+Ref "fuel_station_hours_registered_by_entity_id_fkey":"entities"."id" < "fuel_station_hours"."registered_by_entity_id"
+
+Ref "fuel_station_hours_station_id_fkey":"fuel_stations"."id" < "fuel_station_hours"."station_id"
+
+Ref "fuel_station_operating_periods_station_id_fkey":"fuel_stations"."id" < "fuel_station_operating_periods"."station_id"
+
+Ref "link_status_changed_by_entity_id_fkey":"entities"."id" < "link_status"."changed_by_entity_id"
+
+Ref "link_status_changed_by_link_id_fkey":"links"."id" < "link_status"."changed_by_link_id"
+
+Ref "link_status_link_id_fkey":"links"."id" < "link_status"."link_id"
+
+Ref "links_entity_id_fkey":"entities"."id" < "links"."entity_id"
+
+Ref "links_link_type_id_fkey":"link_types"."id" < "links"."link_type_id"
+
+Ref "links_validated_by_fkey":"links"."id" < "links"."validated_by"
+
+Ref "links_vehicle_id_fkey":"vehicles"."id" < "links"."vehicle_id"
+
+Ref "mileage_records_odometer_id_fkey":"odometers"."id" < "mileage_records"."odometer_id"
+
+Ref "mileage_records_registered_by_link_id_fkey":"links"."id" < "mileage_records"."registered_by_link_id"
+
+Ref "mileage_records_vehicle_id_fkey":"vehicles"."id" < "mileage_records"."vehicle_id"
+
+Ref "model_versions_model_id_fkey":"models"."id" < "model_versions"."model_id"
+
+Ref "models_brand_id_fkey":"brands"."id" < "models"."brand_id"
+
+Ref "odometers_registered_by_link_id_fkey":"links"."id" < "odometers"."registered_by_link_id"
+
+Ref "odometers_vehicle_id_fkey":"vehicles"."id" < "odometers"."vehicle_id"
+
+Ref "plates_created_by_entity_id_fkey":"entities"."id" < "plates"."created_by_entity_id"
+
+Ref "plates_plate_type_id_fkey":"plate_types"."id" < "plates"."plate_type_id"
+
+Ref "plates_vehicle_id_fkey":"vehicles"."id" < "plates"."vehicle_id" [delete: cascade]
+
+Ref "station_fuel_prices_reported_by_entity_id_fkey":"entities"."id" < "station_fuel_prices"."reported_by_entity_id"
+
+Ref "station_fuel_prices_station_fuel_id_fkey":"station_fuels"."id" < "station_fuel_prices"."station_fuel_id"
+
+Ref "station_fuel_prices_verified_by_entity_id_fkey":"entities"."id" < "station_fuel_prices"."verified_by_entity_id"
+
+Ref "station_fuels_fuel_type_id_fkey":"fuel_types"."id" < "station_fuels"."fuel_type_id"
+
+Ref "station_fuels_registered_by_entity_id_fkey":"entities"."id" < "station_fuels"."registered_by_entity_id"
+
+Ref "station_fuels_station_id_fkey":"fuel_stations"."id" < "station_fuels"."station_id"
+
+Ref "vehicle_claims_link_id_fkey":"links"."id" < "vehicle_claims"."link_id"
+
+Ref "vehicle_claims_vehicle_id_fkey":"vehicles"."id" < "vehicle_claims"."vehicle_id"
+
+Ref "vehicle_refuels_fuel_type_id_fkey":"fuel_types"."id" < "vehicle_refuels"."fuel_type_id"
+
+Ref "vehicle_refuels_link_id_fkey":"links"."id" < "vehicle_refuels"."link_id"
+
+Ref "vehicle_refuels_registered_by_link_id_fkey":"links"."id" < "vehicle_refuels"."registered_by_link_id"
+
+Ref "vehicle_refuels_station_fuel_id_fkey":"station_fuels"."id" < "vehicle_refuels"."station_fuel_id"
+
+Ref "vehicle_refuels_station_id_fkey":"fuel_stations"."id" < "vehicle_refuels"."station_id"
+
+Ref "vehicle_refuels_vehicle_id_fkey":"vehicles"."id" < "vehicle_refuels"."vehicle_id"
+
+Ref "vehicles_brand_id_fkey":"brands"."id" < "vehicles"."brand_id"
+
+Ref "vehicles_model_id_fkey":"models"."id" < "vehicles"."model_id"
+
+Ref "vehicles_version_id_fkey":"model_versions"."id" < "vehicles"."version_id"
