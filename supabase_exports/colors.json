@@ -1,0 +1,52 @@
+[
+  {
+    "id": "53f23c79-5f97-4512-92ee-38c02953ce80",
+    "vehicle_id": "0aaa8f25-cd7e-445b-904d-4c40b94463e5",
+    "color": "Black",
+    "start_date": "2021-03-15",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "8729aa7f-0408-4f99-a35c-768ca9d45dc7",
+    "vehicle_id": "0811adcc-d074-4bdd-90be-b7c4c68a6407",
+    "color": "Silver",
+    "start_date": "2022-01-20",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "4ec3ea44-2b2f-4981-be6b-882eafdb6983",
+    "vehicle_id": "a9e4e1eb-bf4d-41a6-a07d-f8cdd4c8bc90",
+    "color": "White",
+    "start_date": "2023-02-10",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "da85c37b-8b0f-41d9-870a-4d10ef54d5c0",
+    "vehicle_id": "949a3427-86d6-41b7-a2ce-06d0aee7b73d",
+    "color": "Red",
+    "start_date": "2019-05-12",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "88c6b13d-2558-421b-8544-85bc93d06410",
+    "vehicle_id": "9902ad46-27a4-40cf-81bc-1eef09cd6491",
+    "color": "Blue",
+    "start_date": "2020-11-08",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "name": "Brazil",
+    "iso_code": "BR",
+    "iso3_code": "BRA",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "829cf719-ca43-4681-aa7b-18c34c11cb09",
+    "name": "Argentina",
+    "iso_code": "AR",
+    "iso3_code": "ARG",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "3ed7b052-a2e9-4fdd-a089-18360aa007c3",
+    "name": "Paraguay",
+    "iso_code": "PY",
+    "iso3_code": "PRY",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "5a0660c7-9c43-406a-aa11-257657c6d33b",
+    "name": "Uruguay",
+    "iso_code": "UY",
+    "iso3_code": "URY",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "3fb9a203-ae08-4599-98a1-3665ef257310",
+    "name": "Chile",
+    "iso_code": "CL",
+    "iso3_code": "CHL",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "493ebb68-b0c7-410a-9bf7-a41d0e1ac782",
+    "name": "United States",
+    "iso_code": "US",
+    "iso3_code": "USA",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  }
+]

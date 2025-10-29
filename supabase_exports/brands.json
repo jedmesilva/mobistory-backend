@@ -1,0 +1,82 @@
+[
+  {
+    "id": "9d93b668-49f6-49d8-b3c3-2dc85bec6c15",
+    "brand": "Fiat",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "2f0a7566-adaa-49ac-b17d-a54c472c23d7",
+    "brand": "Volkswagen",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "099c0813-235f-4a37-a318-dad717cd85dd",
+    "brand": "Chevrolet",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "5b3dd886-3e99-4c44-a36a-8b1a5eaa801c",
+    "brand": "Ford",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "6e4b3dad-670c-4953-89dd-cee38dc0429c",
+    "brand": "Toyota",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "1adf7e01-4d34-4ca0-a473-f7acc9dbaa36",
+    "brand": "Honda",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "e91ea55c-c08e-493b-8cb5-cfde3439ccf2",
+    "brand": "Hyundai",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "a5e505ee-9a4c-41ec-b1a3-78e94ae6a0a1",
+    "brand": "Renault",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "d916029d-38ca-4781-a0aa-84656680b2dc",
+    "brand": "Nissan",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "f6ec2cd5-254b-4b6f-87c0-2e45413ecfae",
+    "brand": "Jeep",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  }
+]

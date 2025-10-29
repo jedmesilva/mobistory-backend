@@ -1,0 +1,82 @@
+[
+  {
+    "id": "930f18b4-85ac-487e-a22b-6b0ae7f09f08",
+    "vehicle_id": "0aaa8f25-cd7e-445b-904d-4c40b94463e5",
+    "entity_id": "244eedc6-0e2e-444e-9c18-9db6a9eb716c",
+    "caption": "Manhã de domingo com meu querido Civic! 🌅 Rodão impecável!",
+    "type": "image",
+    "location": "São Paulo, SP",
+    "tags": [
+      "viagem",
+      "domingo",
+      "estrada"
+    ],
+    "active": true,
+    "created_at": "2025-10-16T17:48:30.255447+00:00",
+    "updated_at": "2025-10-16T17:48:30.255447+00:00"
+  },
+  {
+    "id": "fd1a0ac0-e783-444e-b391-affd956187b4",
+    "vehicle_id": "0811adcc-d074-4bdd-90be-b7c4c68a6407",
+    "entity_id": "86b66096-2843-4ca0-8e8c-ab0628b7884a",
+    "caption": "Dia de manutenção preventiva! Carro sempre caprichado. 🔧",
+    "type": "image",
+    "location": "São Paulo, SP",
+    "tags": [
+      "manutencao",
+      "cuidados",
+      "mecanica"
+    ],
+    "active": true,
+    "created_at": "2025-10-16T17:48:30.255447+00:00",
+    "updated_at": "2025-10-16T17:48:30.255447+00:00"
+  },
+  {
+    "id": "e2b4dad4-bc37-480d-9928-4340fb34c7f2",
+    "vehicle_id": "a9e4e1eb-bf4d-41a6-a07d-f8cdd4c8bc90",
+    "entity_id": "1eb27bed-0669-4f4e-8189-83cae28c7ae5",
+    "caption": "Abasteci no caminho pro trabalho. Consumo está ótimo! ⛽",
+    "type": "image",
+    "location": "Campinas, SP",
+    "tags": [
+      "abastecimento",
+      "economia",
+      "combustivel"
+    ],
+    "active": true,
+    "created_at": "2025-10-16T17:48:30.255447+00:00",
+    "updated_at": "2025-10-16T17:48:30.255447+00:00"
+  },
+  {
+    "id": "fd3facb6-d75b-4fc9-b3cb-87808c3e9263",
+    "vehicle_id": "949a3427-86d6-41b7-a2ce-06d0aee7b73d",
+    "entity_id": "1c9b8fd2-2822-4191-a0d3-fbf94fe46fe3",
+    "caption": "Meu companheiro de todas as horas! 12 anos juntos. ❤️",
+    "type": "image",
+    "location": "Santos, SP",
+    "tags": [
+      "nostalgia",
+      "parceria",
+      "historia"
+    ],
+    "active": true,
+    "created_at": "2025-10-16T17:48:30.255447+00:00",
+    "updated_at": "2025-10-16T17:48:30.255447+00:00"
+  },
+  {
+    "id": "e8ccf697-50ea-4098-977b-651f69cf10fb",
+    "vehicle_id": "9902ad46-27a4-40cf-81bc-1eef09cd6491",
+    "entity_id": "244eedc6-0e2e-444e-9c18-9db6a9eb716c",
+    "caption": "Lavagem completa! Ficou novo! 💧✨",
+    "type": "image",
+    "location": "São Paulo, SP",
+    "tags": [
+      "limpeza",
+      "cuidados",
+      "estetica"
+    ],
+    "active": true,
+    "created_at": "2025-10-16T17:48:30.255447+00:00",
+    "updated_at": "2025-10-16T17:48:30.255447+00:00"
+  }
+]

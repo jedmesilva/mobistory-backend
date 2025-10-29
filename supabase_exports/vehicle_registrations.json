@@ -1,0 +1,62 @@
+[
+  {
+    "id": "6f8a6348-d2a2-401e-a093-264d0157e2fd",
+    "vehicle_id": "0aaa8f25-cd7e-445b-904d-4c40b94463e5",
+    "country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "registration_number": "123456789-0",
+    "registration_type": "PERMANENT",
+    "start_date": "2021-03-15",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "80ea9079-c215-4894-bbc3-5f36e0be2e52",
+    "vehicle_id": "0811adcc-d074-4bdd-90be-b7c4c68a6407",
+    "country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "registration_number": "234567890-1",
+    "registration_type": "PERMANENT",
+    "start_date": "2022-01-20",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "e2f2f56c-684b-43a9-8361-222240c0e97c",
+    "vehicle_id": "a9e4e1eb-bf4d-41a6-a07d-f8cdd4c8bc90",
+    "country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "registration_number": "345678901-2",
+    "registration_type": "PERMANENT",
+    "start_date": "2023-02-10",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "0c12f97b-a1d5-49ee-921e-ae214687472a",
+    "vehicle_id": "949a3427-86d6-41b7-a2ce-06d0aee7b73d",
+    "country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "registration_number": "456789012-3",
+    "registration_type": "PERMANENT",
+    "start_date": "2019-05-12",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "5c5f8d29-dd15-4ed7-9970-cea8a4fc5d7e",
+    "vehicle_id": "9902ad46-27a4-40cf-81bc-1eef09cd6491",
+    "country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "registration_number": "567890123-4",
+    "registration_type": "PERMANENT",
+    "start_date": "2020-11-08",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  }
+]

@@ -1,0 +1,542 @@
+[
+  {
+    "id": "867a1936-9f79-410d-983f-0219f0738f20",
+    "brand_id": "9d93b668-49f6-49d8-b3c3-2dc85bec6c15",
+    "model": "Uno",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "5d98e6d4-75d8-4393-ab2a-20f7557dbb4c",
+    "brand_id": "9d93b668-49f6-49d8-b3c3-2dc85bec6c15",
+    "model": "Palio",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "7644d1a8-e18a-44aa-acbd-9b8d83ab0682",
+    "brand_id": "9d93b668-49f6-49d8-b3c3-2dc85bec6c15",
+    "model": "Strada",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "3004e7de-6d4f-45c0-a5e2-13040639eafd",
+    "brand_id": "9d93b668-49f6-49d8-b3c3-2dc85bec6c15",
+    "model": "Argo",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "ca35e4d1-c1a1-4286-a331-5f45de0333da",
+    "brand_id": "9d93b668-49f6-49d8-b3c3-2dc85bec6c15",
+    "model": "Mobi",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "2155af8a-b51c-4601-82d4-b0345ab29258",
+    "brand_id": "9d93b668-49f6-49d8-b3c3-2dc85bec6c15",
+    "model": "Toro",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "4190006c-d444-4d09-a644-e6a37b6dfb3d",
+    "brand_id": "2f0a7566-adaa-49ac-b17d-a54c472c23d7",
+    "model": "Gol",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "b3e292de-1c61-491e-b40d-364f44183ac7",
+    "brand_id": "2f0a7566-adaa-49ac-b17d-a54c472c23d7",
+    "model": "Polo",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "883a9e39-fbb7-4d7e-9f8b-ff7039053689",
+    "brand_id": "2f0a7566-adaa-49ac-b17d-a54c472c23d7",
+    "model": "Virtus",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "d7f5d212-2b1c-4b3b-933c-ec011c0b1bee",
+    "brand_id": "2f0a7566-adaa-49ac-b17d-a54c472c23d7",
+    "model": "T-Cross",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "401b7e48-4aa9-4e98-8a52-f7b223c4c7d4",
+    "brand_id": "2f0a7566-adaa-49ac-b17d-a54c472c23d7",
+    "model": "Nivus",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "c714fad2-9f94-43fc-a988-1f1c9194b968",
+    "brand_id": "2f0a7566-adaa-49ac-b17d-a54c472c23d7",
+    "model": "Saveiro",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "f5e355c3-2ea3-488d-92d3-3f53ba233a4a",
+    "brand_id": "099c0813-235f-4a37-a318-dad717cd85dd",
+    "model": "Onix",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "7a86e11b-a4a1-4ed8-9e50-b5f9a3219b40",
+    "brand_id": "099c0813-235f-4a37-a318-dad717cd85dd",
+    "model": "Prisma",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "af6998a4-eef5-4b59-b642-670ea929c261",
+    "brand_id": "099c0813-235f-4a37-a318-dad717cd85dd",
+    "model": "Tracker",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "f38f4800-bca9-40ff-98af-5cc4a1b81c02",
+    "brand_id": "099c0813-235f-4a37-a318-dad717cd85dd",
+    "model": "S10",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "b89ce543-821e-4cc3-925a-819f60059d9e",
+    "brand_id": "099c0813-235f-4a37-a318-dad717cd85dd",
+    "model": "Spin",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "834f04fd-113f-4068-b591-0580c6d06fac",
+    "brand_id": "099c0813-235f-4a37-a318-dad717cd85dd",
+    "model": "Montana",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "ce2ac7fb-ea51-4aa1-b0fd-da05c98a4027",
+    "brand_id": "5b3dd886-3e99-4c44-a36a-8b1a5eaa801c",
+    "model": "Ka",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "229e31a0-e5c6-4b32-8446-06a5530f5ef6",
+    "brand_id": "5b3dd886-3e99-4c44-a36a-8b1a5eaa801c",
+    "model": "Fiesta",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "6e3676d0-a495-4a60-98b7-3fd9a18df9fa",
+    "brand_id": "5b3dd886-3e99-4c44-a36a-8b1a5eaa801c",
+    "model": "EcoSport",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "4adac5d8-95c7-4206-b1c0-b39d7a339cd2",
+    "brand_id": "5b3dd886-3e99-4c44-a36a-8b1a5eaa801c",
+    "model": "Ranger",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "57e83e7f-93fd-4641-9ca5-9e1df7286541",
+    "brand_id": "5b3dd886-3e99-4c44-a36a-8b1a5eaa801c",
+    "model": "Territory",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "6b577a05-d914-4636-9a5c-8f8490cdc09f",
+    "brand_id": "5b3dd886-3e99-4c44-a36a-8b1a5eaa801c",
+    "model": "Mustang",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "0743e647-9d0c-4b8d-831d-a245e089b999",
+    "brand_id": "6e4b3dad-670c-4953-89dd-cee38dc0429c",
+    "model": "Corolla",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "6f3c39f5-3d6d-49b5-a96a-cb4b60fdd5d6",
+    "brand_id": "6e4b3dad-670c-4953-89dd-cee38dc0429c",
+    "model": "Hilux",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "88f35684-2da3-43e9-baa0-54421d5dbc44",
+    "brand_id": "6e4b3dad-670c-4953-89dd-cee38dc0429c",
+    "model": "SW4",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "557c35b8-c629-4427-b88d-ad81fa32b173",
+    "brand_id": "6e4b3dad-670c-4953-89dd-cee38dc0429c",
+    "model": "Yaris",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "ed677833-2b85-4580-a9af-077fe35e8d82",
+    "brand_id": "6e4b3dad-670c-4953-89dd-cee38dc0429c",
+    "model": "RAV4",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "553bd676-124e-4907-9b90-561d379f8a5f",
+    "brand_id": "6e4b3dad-670c-4953-89dd-cee38dc0429c",
+    "model": "Camry",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "f0f09756-7be1-47f1-935b-accaf054e53c",
+    "brand_id": "1adf7e01-4d34-4ca0-a473-f7acc9dbaa36",
+    "model": "Civic",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "32298846-b67a-4bfb-b1a2-5fa4dac55c9e",
+    "brand_id": "1adf7e01-4d34-4ca0-a473-f7acc9dbaa36",
+    "model": "City",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "72a547b0-2696-4756-a929-68818f28d277",
+    "brand_id": "1adf7e01-4d34-4ca0-a473-f7acc9dbaa36",
+    "model": "HR-V",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "998b95a1-9157-442b-b92f-c0a42dfedf77",
+    "brand_id": "1adf7e01-4d34-4ca0-a473-f7acc9dbaa36",
+    "model": "CR-V",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "7a643f68-bb78-472d-adef-5a87a7323c86",
+    "brand_id": "1adf7e01-4d34-4ca0-a473-f7acc9dbaa36",
+    "model": "Fit",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "7deb60a4-f8ee-486c-a2d7-642a3e49cea8",
+    "brand_id": "1adf7e01-4d34-4ca0-a473-f7acc9dbaa36",
+    "model": "WR-V",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "a39e6772-0878-42c4-ad98-bce9c6a8b77d",
+    "brand_id": "e91ea55c-c08e-493b-8cb5-cfde3439ccf2",
+    "model": "HB20",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "fba9bb0f-28fa-4e8f-a9b2-071ee1ed1ad7",
+    "brand_id": "e91ea55c-c08e-493b-8cb5-cfde3439ccf2",
+    "model": "Creta",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "8a058e0c-bfd1-45fc-b4bc-c812a613baad",
+    "brand_id": "e91ea55c-c08e-493b-8cb5-cfde3439ccf2",
+    "model": "Tucson",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "6e710bf4-be8d-47d5-86dc-2b811e46b119",
+    "brand_id": "e91ea55c-c08e-493b-8cb5-cfde3439ccf2",
+    "model": "Santa Fe",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "77644c67-a785-477f-9f10-7c1113c1dcff",
+    "brand_id": "e91ea55c-c08e-493b-8cb5-cfde3439ccf2",
+    "model": "i30",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "746cbe29-e67c-47a1-a98d-99f255c40124",
+    "brand_id": "e91ea55c-c08e-493b-8cb5-cfde3439ccf2",
+    "model": "Azera",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "4a9d99a7-7ed5-4647-bae8-87917ce8dc82",
+    "brand_id": "a5e505ee-9a4c-41ec-b1a3-78e94ae6a0a1",
+    "model": "Kwid",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "dab4b9c9-c9d2-4b4c-88c6-13996859a063",
+    "brand_id": "a5e505ee-9a4c-41ec-b1a3-78e94ae6a0a1",
+    "model": "Sandero",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "f4b4949c-ae6f-4206-b010-659c3a3cbc90",
+    "brand_id": "a5e505ee-9a4c-41ec-b1a3-78e94ae6a0a1",
+    "model": "Logan",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "9c7d9759-3f87-4c1f-9232-9bf35c9e8ed3",
+    "brand_id": "a5e505ee-9a4c-41ec-b1a3-78e94ae6a0a1",
+    "model": "Duster",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "65221dc7-759b-4435-a94a-4791c1173cb0",
+    "brand_id": "a5e505ee-9a4c-41ec-b1a3-78e94ae6a0a1",
+    "model": "Captur",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "c51a503f-3d44-4902-b38a-cde97bf2e42a",
+    "brand_id": "a5e505ee-9a4c-41ec-b1a3-78e94ae6a0a1",
+    "model": "Oroch",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "4073ad62-f63e-4e51-a05c-916bbb0b023d",
+    "brand_id": "d916029d-38ca-4781-a0aa-84656680b2dc",
+    "model": "Versa",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "4a292ca1-d7c5-47e4-94d5-21f1144ad043",
+    "brand_id": "d916029d-38ca-4781-a0aa-84656680b2dc",
+    "model": "Kicks",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "d448ccd3-db47-43b1-9aef-df79265eb8d3",
+    "brand_id": "d916029d-38ca-4781-a0aa-84656680b2dc",
+    "model": "Frontier",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "d3d93302-ff89-484a-b151-6f3def2bc724",
+    "brand_id": "d916029d-38ca-4781-a0aa-84656680b2dc",
+    "model": "Sentra",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "c825d300-6316-4957-90a1-d199ae31d366",
+    "brand_id": "d916029d-38ca-4781-a0aa-84656680b2dc",
+    "model": "March",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "dedadab1-5050-43e7-a34d-8c43b4c50411",
+    "brand_id": "d916029d-38ca-4781-a0aa-84656680b2dc",
+    "model": "Leaf",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "eec29500-79d4-4552-b4e6-412dc61e9419",
+    "brand_id": "f6ec2cd5-254b-4b6f-87c0-2e45413ecfae",
+    "model": "Renegade",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "36b68c1b-8d7c-4396-b69f-342785143734",
+    "brand_id": "f6ec2cd5-254b-4b6f-87c0-2e45413ecfae",
+    "model": "Compass",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "930b64c7-b58e-4344-a4f1-99ccaed82508",
+    "brand_id": "f6ec2cd5-254b-4b6f-87c0-2e45413ecfae",
+    "model": "Commander",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "b232c64a-03cf-4bff-9420-3f7641ccca2c",
+    "brand_id": "f6ec2cd5-254b-4b6f-87c0-2e45413ecfae",
+    "model": "Wrangler",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "c1d6afb3-3d75-4da9-8e31-a78b7e5e8e5e",
+    "brand_id": "f6ec2cd5-254b-4b6f-87c0-2e45413ecfae",
+    "model": "Grand Cherokee",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "740486c4-e9fa-47b6-834a-29a26e6a8f50",
+    "brand_id": "f6ec2cd5-254b-4b6f-87c0-2e45413ecfae",
+    "model": "Cherokee",
+    "verified": true,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  }
+]

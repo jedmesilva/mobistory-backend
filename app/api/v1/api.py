@@ -9,18 +9,21 @@ from app.api.v1.endpoints import (
     maintenance,
     websocket,
     upload,
+    all_data,
+    moments,
+    entities,
 )
 
 api_router = APIRouter()
 
-# Autenticação
+# Autenticacao
 api_router.include_router(
     auth.router,
     prefix="/auth",
     tags=["authentication"],
 )
 
-# Veículos
+# Veiculos
 api_router.include_router(
     vehicles.router,
     prefix="/vehicles",
@@ -55,7 +58,7 @@ api_router.include_router(
     tags=["fueling"],
 )
 
-# Manutenções
+# Manutencoes
 api_router.include_router(
     maintenance.router,
     prefix="/maintenance",
@@ -74,4 +77,22 @@ api_router.include_router(
     upload.router,
     prefix="/upload",
     tags=["upload"],
+)
+
+# Dados completos (equivalente ao Supabase)
+api_router.include_router(
+    all_data.router,
+    tags=["data"],
+)
+
+# Moments com detalhes
+api_router.include_router(
+    moments.router,
+    tags=["moments"],
+)
+
+# Entidades e vínculos
+api_router.include_router(
+    entities.router,
+    tags=["entities"],
 )

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "a81b6983-ab04-4b18-8798-0a6643ead444",
+    "name": "Gasoline",
+    "type": "fossil",
+    "description": "Regular gasoline fuel",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "eec581fb-d300-4977-b204-319b2bd6f417",
+    "name": "Ethanol",
+    "type": "renewable",
+    "description": "Ethanol biofuel",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "78106753-71f7-4591-93b8-bf5cb90cd12f",
+    "name": "Diesel",
+    "type": "fossil",
+    "description": "Diesel fuel",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "c9f57faa-04e1-4ae2-bb47-72f06dcc1c10",
+    "name": "CNG",
+    "type": "fossil",
+    "description": "Compressed Natural Gas",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "3f7f2bc4-b5ea-4f79-877a-2f36ac17b4b3",
+    "name": "Electric",
+    "type": "renewable",
+    "description": "Electric battery",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "13c1d78d-51d5-43d6-abaa-16d32638e9eb",
+    "name": "Flex",
+    "type": "hybrid",
+    "description": "Gasoline and Ethanol flex fuel",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "f60f145d-9302-4d3c-af4f-e39cdcb9192b",
+    "name": "Hybrid",
+    "type": "hybrid",
+    "description": "Gasoline and Electric hybrid",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  }
+]

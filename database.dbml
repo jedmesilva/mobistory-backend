@@ -612,6 +612,159 @@ Table "colors" {
   }
 }
 
+Table "files" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "vehicle_id" uuid
+  "uploaded_by_entity_id" uuid [not null]
+  "file_url" text [not null]
+  "file_name" varchar
+  "file_type" varchar
+  "mime_type" varchar
+  "file_size_bytes" int8
+  "width" int4
+  "height" int4
+  "duration_seconds" int4
+  "source" varchar
+  "status" varchar
+  "uploaded_at" timestamptz [default: `now()`]
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    status [type: btree, name: "idx_files_status"]
+    uploaded_by_entity_id [type: btree, name: "idx_files_uploaded_by_entity_id"]
+    vehicle_id [type: btree, name: "idx_files_vehicle_id"]
+    (vehicle_id, status) [type: btree, name: "idx_files_vehicle_status"]
+  }
+}
+
+Table "vehicle_covers" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "vehicle_id" uuid [not null]
+  "file_id" uuid [not null]
+  "is_primary" bool
+  "display_order" int4
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    file_id [type: btree, name: "idx_vehicle_covers_file_id"]
+    is_primary [type: btree, name: "idx_vehicle_covers_is_primary"]
+    vehicle_id [type: btree, name: "idx_vehicle_covers_vehicle_id"]
+    (vehicle_id, is_primary) [type: btree, name: "idx_vehicle_covers_vehicle_primary"]
+  }
+}
+
+Table "entity_documents" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "entity_id" uuid [not null]
+  "file_id" uuid [not null]
+  "document_type" varchar
+  "document_number" varchar
+  "issue_date" date
+  "expiry_date" date
+  "issuing_authority" varchar
+  "is_verified" bool
+  "verified_at" timestamptz
+  "verified_by_entity_id" uuid
+  "is_current" bool
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    document_type [type: btree, name: "idx_entity_documents_document_type"]
+    entity_id [type: btree, name: "idx_entity_documents_entity_id"]
+    (entity_id, document_type) [type: btree, name: "idx_entity_documents_entity_type"]
+    file_id [type: btree, name: "idx_entity_documents_file_id"]
+    is_current [type: btree, name: "idx_entity_documents_is_current"]
+  }
+}
+
+Table "moments" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "created_by_entity_id" uuid [not null]
+  "status" varchar
+  "visibility" varchar
+  "location_lat" numeric(10,7)
+  "location_lng" numeric(10,7)
+  "location_name" varchar
+  "recorded_at" timestamptz
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    created_at [type: btree, name: "idx_moments_created_at"]
+    created_by_entity_id [type: btree, name: "idx_moments_created_by_entity_id"]
+    status [type: btree, name: "idx_moments_status"]
+    visibility [type: btree, name: "idx_moments_visibility"]
+  }
+}
+
+Table "moment_contents" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "moment_id" uuid [not null]
+  "file_id" uuid [not null]
+  "display_order" int4
+  "is_cover" bool
+  "created_at" timestamptz [default: `now()`]
+
+  Indexes {
+    (moment_id, display_order) [type: btree, name: "idx_moment_contents_display_order"]
+    file_id [type: btree, name: "idx_moment_contents_file_id"]
+    moment_id [type: btree, name: "idx_moment_contents_moment_id"]
+  }
+}
+
+Table "moment_vehicles" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "moment_id" uuid [not null]
+  "vehicle_id" uuid [not null]
+  "tagged_by_entity_id" uuid
+  "created_at" timestamptz [default: `now()`]
+
+  Indexes {
+    moment_id [type: btree, name: "idx_moment_vehicles_moment_id"]
+    vehicle_id [type: btree, name: "idx_moment_vehicles_vehicle_id"]
+  }
+}
+
+Table "moment_descriptions" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "moment_id" uuid [not null]
+  "description" text [not null]
+  "edited_by_entity_id" uuid [not null]
+  "is_current" bool
+  "edit_reason" varchar
+  "created_at" timestamptz [default: `now()`]
+
+  Indexes {
+    (moment_id, is_current) [type: btree, name: "idx_moment_descriptions_is_current"]
+    moment_id [type: btree, name: "idx_moment_descriptions_moment_id"]
+  }
+}
+
+Table "moment_reactions" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "moment_id" uuid [not null]
+  "parent_reaction_id" uuid
+  "created_by_entity_id" uuid [not null]
+  "reaction_emoji" varchar
+  "comment" text
+  "is_edited" bool
+  "is_deleted" bool
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    created_at [type: btree, name: "idx_moment_reactions_created_at"]
+    created_by_entity_id [type: btree, name: "idx_moment_reactions_created_by"]
+    (moment_id, created_at) [type: btree, name: "idx_moment_reactions_moment_created"]
+    moment_id [type: btree, name: "idx_moment_reactions_moment_id"]
+    parent_reaction_id [type: btree, name: "idx_moment_reactions_parent_id"]
+    (parent_reaction_id, created_at) [type: btree, name: "idx_moment_reactions_thread"]
+  }
+}
+
 Ref "action_notes_action_id_fkey":"actions"."id" < "action_notes"."action_id"
 
 Ref "action_notes_entity_id_fkey":"entities"."id" < "action_notes"."entity_id"
@@ -680,6 +833,16 @@ Ref "conversations_primary_vehicle_id_fkey":"vehicles"."id" < "conversations"."p
 
 Ref "entities_entity_type_id_fkey":"entity_types"."id" < "entities"."entity_type_id"
 
+Ref "entity_documents_entity_id_fkey":"entities"."id" < "entity_documents"."entity_id" [delete: cascade]
+
+Ref "entity_documents_file_id_fkey":"files"."id" < "entity_documents"."file_id" [delete: cascade]
+
+Ref "entity_documents_verified_by_entity_id_fkey":"entities"."id" < "entity_documents"."verified_by_entity_id"
+
+Ref "files_uploaded_by_entity_id_fkey":"entities"."id" < "files"."uploaded_by_entity_id"
+
+Ref "files_vehicle_id_fkey":"vehicles"."id" < "files"."vehicle_id" [delete: cascade]
+
 Ref "fuel_station_flags_flag_id_fkey":"flags"."id" < "fuel_station_flags"."flag_id"
 
 Ref "fuel_station_flags_registered_by_entity_id_fkey":"entities"."id" < "fuel_station_flags"."registered_by_entity_id"
@@ -716,6 +879,28 @@ Ref "model_versions_model_id_fkey":"models"."id" < "model_versions"."model_id"
 
 Ref "models_brand_id_fkey":"brands"."id" < "models"."brand_id"
 
+Ref "moment_contents_file_id_fkey":"files"."id" < "moment_contents"."file_id" [delete: cascade]
+
+Ref "moment_contents_moment_id_fkey":"moments"."id" < "moment_contents"."moment_id" [delete: cascade]
+
+Ref "moment_descriptions_edited_by_entity_id_fkey":"entities"."id" < "moment_descriptions"."edited_by_entity_id"
+
+Ref "moment_descriptions_moment_id_fkey":"moments"."id" < "moment_descriptions"."moment_id" [delete: cascade]
+
+Ref "moment_reactions_created_by_entity_id_fkey":"entities"."id" < "moment_reactions"."created_by_entity_id"
+
+Ref "moment_reactions_moment_id_fkey":"moments"."id" < "moment_reactions"."moment_id" [delete: cascade]
+
+Ref "moment_reactions_parent_reaction_id_fkey":"moment_reactions"."id" < "moment_reactions"."parent_reaction_id" [delete: cascade]
+
+Ref "moment_vehicles_moment_id_fkey":"moments"."id" < "moment_vehicles"."moment_id" [delete: cascade]
+
+Ref "moment_vehicles_tagged_by_entity_id_fkey":"entities"."id" < "moment_vehicles"."tagged_by_entity_id"
+
+Ref "moment_vehicles_vehicle_id_fkey":"vehicles"."id" < "moment_vehicles"."vehicle_id" [delete: cascade]
+
+Ref "moments_created_by_entity_id_fkey":"entities"."id" < "moments"."created_by_entity_id"
+
 Ref "odometers_registered_by_link_id_fkey":"links"."id" < "odometers"."registered_by_link_id"
 
 Ref "odometers_vehicle_id_fkey":"vehicles"."id" < "odometers"."vehicle_id"
@@ -741,6 +926,10 @@ Ref "station_fuels_station_id_fkey":"fuel_stations"."id" < "station_fuels"."stat
 Ref "vehicle_claims_link_id_fkey":"links"."id" < "vehicle_claims"."link_id"
 
 Ref "vehicle_claims_vehicle_id_fkey":"vehicles"."id" < "vehicle_claims"."vehicle_id"
+
+Ref "vehicle_covers_file_id_fkey":"files"."id" < "vehicle_covers"."file_id" [delete: cascade]
+
+Ref "vehicle_covers_vehicle_id_fkey":"vehicles"."id" < "vehicle_covers"."vehicle_id" [delete: cascade]
 
 Ref "vehicle_refuels_fuel_type_id_fkey":"fuel_types"."id" < "vehicle_refuels"."fuel_type_id"
 

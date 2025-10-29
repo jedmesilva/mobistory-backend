@@ -1,0 +1,67 @@
+[
+  {
+    "id": "f35e8178-3446-441e-877d-b293c6c04313",
+    "vehicle_id": "0aaa8f25-cd7e-445b-904d-4c40b94463e5",
+    "plate_type_id": "f1b8f252-0760-4b8e-b547-3da7a90d8427",
+    "plate": "ABC1D23",
+    "state": "SP",
+    "licensing_country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "start_date": "2021-03-15",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "2256d0a7-974b-44fd-8f44-98e27a076c7f",
+    "vehicle_id": "0811adcc-d074-4bdd-90be-b7c4c68a6407",
+    "plate_type_id": "f1b8f252-0760-4b8e-b547-3da7a90d8427",
+    "plate": "DEF2E34",
+    "state": "RJ",
+    "licensing_country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "start_date": "2022-01-20",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "057b1fc6-436d-4035-88ae-735cf16a8a26",
+    "vehicle_id": "a9e4e1eb-bf4d-41a6-a07d-f8cdd4c8bc90",
+    "plate_type_id": "f1b8f252-0760-4b8e-b547-3da7a90d8427",
+    "plate": "GHI3F45",
+    "state": "MG",
+    "licensing_country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "start_date": "2023-02-10",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "ae93df4a-3362-4239-bf5d-0b535436270a",
+    "vehicle_id": "949a3427-86d6-41b7-a2ce-06d0aee7b73d",
+    "plate_type_id": "f1b8f252-0760-4b8e-b547-3da7a90d8427",
+    "plate": "JKL4G56",
+    "state": "RS",
+    "licensing_country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "start_date": "2019-05-12",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "078ffd29-b52d-4520-9dc0-27b6e188a293",
+    "vehicle_id": "9902ad46-27a4-40cf-81bc-1eef09cd6491",
+    "plate_type_id": "f1b8f252-0760-4b8e-b547-3da7a90d8427",
+    "plate": "MNO5H67",
+    "state": "PR",
+    "licensing_country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "start_date": "2020-11-08",
+    "end_date": null,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  }
+]

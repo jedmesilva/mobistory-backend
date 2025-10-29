@@ -1,0 +1,38 @@
+[
+  {
+    "id": "f1b8f252-0760-4b8e-b547-3da7a90d8427",
+    "country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "name": "Mercosul",
+    "description": "Brazilian Mercosul standard plate",
+    "format_pattern": "^[A-Z]{3}[0-9][A-Z][0-9]{2}$",
+    "valid_from": "2018-01-01",
+    "valid_until": null,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "a24b3d18-2c76-4f89-b904-d567a7963937",
+    "country_id": "e221a3ca-c40a-4079-8b72-e2c0427e7235",
+    "name": "Old Gray",
+    "description": "Brazilian old gray plate standard",
+    "format_pattern": "^[A-Z]{3}[0-9]{4}$",
+    "valid_from": null,
+    "valid_until": "2020-12-31",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "f2dcd075-9146-4edb-bb7c-373b78cb067b",
+    "country_id": "829cf719-ca43-4681-aa7b-18c34c11cb09",
+    "name": "New Patent",
+    "description": "Argentine new patent standard",
+    "format_pattern": "^[A-Z]{2}[0-9]{3}[A-Z]{2}$",
+    "valid_from": "2016-01-01",
+    "valid_until": null,
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  }
+]

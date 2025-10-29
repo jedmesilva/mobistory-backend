@@ -1,0 +1,50 @@
+[
+  {
+    "id": "78f6696f-93bb-4dae-936a-eea1f4e9d065",
+    "category": "Passenger",
+    "description": "Regular passenger cars",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "be71d563-caf8-4a62-83fe-1aa7de5ea3c9",
+    "category": "SUV",
+    "description": "Sport Utility Vehicles",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "fd807517-9b30-4d04-a7d1-084d22645247",
+    "category": "Truck",
+    "description": "Pickup trucks and cargo trucks",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "133311f4-28cc-4d09-84f9-005b774de52e",
+    "category": "Motorcycle",
+    "description": "Motorcycles and scooters",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "41643810-c8ef-4674-aad2-e0438db389d6",
+    "category": "Bus",
+    "description": "Buses and vans for passenger transport",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  },
+  {
+    "id": "c983a7a4-1dd3-4e33-9388-f998c654e646",
+    "category": "Van",
+    "description": "Commercial vans and cargo vans",
+    "active": true,
+    "created_at": "2025-10-16T06:28:01.19296+00:00",
+    "updated_at": "2025-10-16T06:28:01.19296+00:00"
+  }
+]

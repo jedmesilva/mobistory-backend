@@ -1,0 +1,67 @@
+[
+  {
+    "id": "0aaa8f25-cd7e-445b-904d-4c40b94463e5",
+    "brand_id": "1adf7e01-4d34-4ca0-a473-f7acc9dbaa36",
+    "model_id": "f0f09756-7be1-47f1-935b-accaf054e53c",
+    "version_id": "0da79b98-464a-4981-b308-c3711f477f2c",
+    "category_id": "78f6696f-93bb-4dae-936a-eea1f4e9d065",
+    "chassis": "9BWZZZ377VT004251",
+    "model_year": 2021,
+    "manufacture_year": 2020,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "0811adcc-d074-4bdd-90be-b7c4c68a6407",
+    "brand_id": "6e4b3dad-670c-4953-89dd-cee38dc0429c",
+    "model_id": "0743e647-9d0c-4b8d-831d-a245e089b999",
+    "version_id": "2c35b56b-1112-437c-a3cb-c309aed04d8c",
+    "category_id": "78f6696f-93bb-4dae-936a-eea1f4e9d065",
+    "chassis": "9BR5N2JE0N0123456",
+    "model_year": 2022,
+    "manufacture_year": 2022,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "a9e4e1eb-bf4d-41a6-a07d-f8cdd4c8bc90",
+    "brand_id": "099c0813-235f-4a37-a318-dad717cd85dd",
+    "model_id": "f5e355c3-2ea3-488d-92d3-3f53ba233a4a",
+    "version_id": "7e8acb46-b5dd-4dbe-b21f-5f88c2f8da1c",
+    "category_id": "78f6696f-93bb-4dae-936a-eea1f4e9d065",
+    "chassis": "9BGKS69X0PG123789",
+    "model_year": 2023,
+    "manufacture_year": 2023,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "949a3427-86d6-41b7-a2ce-06d0aee7b73d",
+    "brand_id": "2f0a7566-adaa-49ac-b17d-a54c472c23d7",
+    "model_id": "4190006c-d444-4d09-a644-e6a37b6dfb3d",
+    "version_id": "9ef0fc9e-ec65-4693-b7a7-2329cde29e58",
+    "category_id": "78f6696f-93bb-4dae-936a-eea1f4e9d065",
+    "chassis": "9BWAA05U6KP456123",
+    "model_year": 2019,
+    "manufacture_year": 2019,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  },
+  {
+    "id": "9902ad46-27a4-40cf-81bc-1eef09cd6491",
+    "brand_id": "e91ea55c-c08e-493b-8cb5-cfde3439ccf2",
+    "model_id": "a39e6772-0878-42c4-ad98-bce9c6a8b77d",
+    "version_id": "7276a2d5-0564-4117-b85d-7f0211398f24",
+    "category_id": "78f6696f-93bb-4dae-936a-eea1f4e9d065",
+    "chassis": "9BHBC41DAML789456",
+    "model_year": 2021,
+    "manufacture_year": 2020,
+    "active": true,
+    "created_at": "2025-10-16T06:39:21.552211+00:00",
+    "updated_at": "2025-10-16T06:39:21.552211+00:00"
+  }
+]

@@ -1,5 +1,4 @@
 from .token import Token, TokenPayload
-from .user import User, UserCreate, UserUpdate, UserLogin, UserInDB
 from .vehicle import (
     Vehicle,
     VehicleCreate,
@@ -24,11 +23,6 @@ from .maintenance import Maintenance, MaintenanceCreate, MaintenanceUpdate
 __all__ = [
     "Token",
     "TokenPayload",
-    "User",
-    "UserCreate",
-    "UserUpdate",
-    "UserLogin",
-    "UserInDB",
     "Vehicle",
     "VehicleCreate",
     "VehicleUpdate",
