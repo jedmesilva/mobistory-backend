@@ -298,9 +298,9 @@ Table "vehicle_refuels" {
   "full_tank" bool
   "invoice_url" text
   "observations" text
-  "registered_by_link_id" uuid
   "created_at" timestamptz [default: `now()`]
   "updated_at" timestamptz [default: `now()`]
+  "registered_by_entity_id" uuid [not null]
 
   Indexes {
     refuel_date [type: btree, name: "idx_vehicle_refuels_date"]
@@ -765,6 +765,163 @@ Table "moment_reactions" {
   }
 }
 
+Table "entity_relationships" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "entity_id" uuid [not null]
+  "parent_entity_id" uuid [not null]
+  "relationship_type" varchar [not null]
+  "start_date" date [not null, default: `CURRENT_DATE`]
+  "end_date" date
+  "is_active" bool
+  "reason" text
+  "observations" text
+  "created_by_entity_id" uuid
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    entity_id [type: btree, name: "idx_entity_relationships_entity"]
+    (entity_id, is_active) [type: btree, name: "idx_entity_relationships_entity_active"]
+    (entity_id, parent_entity_id, is_active) [type: btree, name: "idx_entity_relationships_pair"]
+    parent_entity_id [type: btree, name: "idx_entity_relationships_parent"]
+    (parent_entity_id, is_active) [type: btree, name: "idx_entity_relationships_parent_active"]
+    relationship_type [type: btree, name: "idx_entity_relationships_type"]
+  }
+}
+
+Table "entity_names" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "entity_id" uuid [not null]
+  "name_type" varchar [not null]
+  "name_value" varchar [not null]
+  "is_current" bool
+  "start_date" date [not null, default: `CURRENT_DATE`]
+  "end_date" date
+  "reason" varchar
+  "changed_by_entity_id" uuid
+  "observations" text
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    entity_id [type: btree, name: "idx_entity_names_entity"]
+    (entity_id, is_current) [type: btree, name: "idx_entity_names_entity_current"]
+    (entity_id, name_type, is_current) [type: btree, name: "idx_entity_names_type_current"]
+    name_value [type: btree, name: "idx_entity_names_value"]
+  }
+}
+
+Table "entity_identifications" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "entity_id" uuid [not null]
+  "identification_type" varchar [not null]
+  "identification_number" varchar [not null]
+  "issuing_country" varchar
+  "issuing_state" varchar
+  "issuing_authority" varchar
+  "issue_date" date
+  "expiry_date" date
+  "is_verified" bool
+  "verified_at" timestamptz
+  "verified_by_entity_id" uuid
+  "is_primary" bool
+  "is_active" bool
+  "start_date" date [not null, default: `CURRENT_DATE`]
+  "end_date" date
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    entity_id [type: btree, name: "idx_entity_identifications_entity"]
+    identification_number [type: btree, name: "idx_entity_identifications_number"]
+    (entity_id, is_primary, is_active) [type: btree, name: "idx_entity_identifications_primary"]
+    (identification_type, identification_number) [type: btree, name: "idx_entity_identifications_type_number"]
+  }
+}
+
+Table "entity_contacts" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "entity_id" uuid [not null]
+  "contact_type" varchar [not null]
+  "contact_value" varchar [not null]
+  "is_verified" bool
+  "verified_at" timestamptz
+  "is_primary" bool
+  "is_public" bool
+  "use_for_login" bool
+  "use_for_recovery" bool
+  "use_for_notifications" bool
+  "use_for_2fa" bool
+  "label" varchar
+  "is_active" bool
+  "start_date" date [not null, default: `CURRENT_DATE`]
+  "end_date" date
+  "created_at" timestamptz [default: `now()`]
+  "updated_at" timestamptz [default: `now()`]
+
+  Indexes {
+    entity_id [type: btree, name: "idx_entity_contacts_entity"]
+    (entity_id, contact_type) [type: btree, name: "idx_entity_contacts_entity_type"]
+    (entity_id, use_for_login, is_verified) [type: btree, name: "idx_entity_contacts_login"]
+    (entity_id, is_primary) [type: btree, name: "idx_entity_contacts_primary"]
+    (entity_id, use_for_recovery, is_verified) [type: btree, name: "idx_entity_contacts_recovery"]
+    contact_value [type: btree, name: "idx_entity_contacts_value"]
+  }
+}
+
+Table "entity_credentials" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "entity_id" uuid [not null]
+  "credential_type" varchar [not null]
+  "credential_hash" text [not null]
+  "hash_algorithm" varchar [not null]
+  "salt" varchar
+  "iterations" int4
+  "is_current" bool
+  "is_compromised" bool
+  "compromised_at" timestamptz
+  "compromised_reason" text
+  "expires_at" timestamptz
+  "last_used_at" timestamptz
+  "failed_attempts" int4
+  "locked_until" timestamptz
+  "created_by_entity_id" uuid
+  "creation_method" varchar
+  "creation_ip" varchar
+  "replaced_credential_id" uuid
+  "metadata" jsonb
+  "created_at" timestamptz [default: `now()`]
+
+  Indexes {
+    (entity_id, is_current, credential_type) [type: btree, name: "idx_entity_credentials_current"]
+    entity_id [type: btree, name: "idx_entity_credentials_entity"]
+    expires_at [type: btree, name: "idx_entity_credentials_expires"]
+    (entity_id, credential_type) [type: btree, name: "idx_entity_credentials_type"]
+  }
+}
+
+Table "entity_credential_attempts" {
+  "id" uuid [pk, not null, default: `gen_random_uuid()`]
+  "entity_id" uuid [not null]
+  "credential_id" uuid
+  "attempt_type" varchar [not null]
+  "success" bool [not null]
+  "failure_reason" varchar
+  "ip_address" varchar
+  "user_agent" text
+  "device_fingerprint" varchar
+  "metadata" jsonb
+  "created_at" timestamptz [default: `now()`]
+
+  Indexes {
+    credential_id [type: btree, name: "idx_credential_attempts_credential"]
+    created_at [type: btree, name: "idx_credential_attempts_date"]
+    entity_id [type: btree, name: "idx_credential_attempts_entity"]
+    (entity_id, created_at) [type: btree, name: "idx_credential_attempts_entity_date"]
+    success [type: btree, name: "idx_credential_attempts_success"]
+  }
+}
+
 Ref "action_notes_action_id_fkey":"actions"."id" < "action_notes"."action_id"
 
 Ref "action_notes_entity_id_fkey":"entities"."id" < "action_notes"."entity_id"
@@ -833,11 +990,37 @@ Ref "conversations_primary_vehicle_id_fkey":"vehicles"."id" < "conversations"."p
 
 Ref "entities_entity_type_id_fkey":"entity_types"."id" < "entities"."entity_type_id"
 
+Ref "entity_contacts_entity_id_fkey":"entities"."id" < "entity_contacts"."entity_id" [delete: cascade]
+
+Ref "entity_credential_attempts_credential_id_fkey":"entity_credentials"."id" < "entity_credential_attempts"."credential_id" [delete: set null]
+
+Ref "entity_credential_attempts_entity_id_fkey":"entities"."id" < "entity_credential_attempts"."entity_id" [delete: cascade]
+
+Ref "entity_credentials_created_by_entity_id_fkey":"entities"."id" < "entity_credentials"."created_by_entity_id"
+
+Ref "entity_credentials_entity_id_fkey":"entities"."id" < "entity_credentials"."entity_id" [delete: cascade]
+
+Ref "entity_credentials_replaced_credential_id_fkey":"entity_credentials"."id" < "entity_credentials"."replaced_credential_id" [delete: set null]
+
 Ref "entity_documents_entity_id_fkey":"entities"."id" < "entity_documents"."entity_id" [delete: cascade]
 
 Ref "entity_documents_file_id_fkey":"files"."id" < "entity_documents"."file_id" [delete: cascade]
 
 Ref "entity_documents_verified_by_entity_id_fkey":"entities"."id" < "entity_documents"."verified_by_entity_id"
+
+Ref "entity_identifications_entity_id_fkey":"entities"."id" < "entity_identifications"."entity_id" [delete: cascade]
+
+Ref "entity_identifications_verified_by_entity_id_fkey":"entities"."id" < "entity_identifications"."verified_by_entity_id"
+
+Ref "entity_names_changed_by_entity_id_fkey":"entities"."id" < "entity_names"."changed_by_entity_id"
+
+Ref "entity_names_entity_id_fkey":"entities"."id" < "entity_names"."entity_id" [delete: cascade]
+
+Ref "entity_relationships_created_by_entity_id_fkey":"entities"."id" < "entity_relationships"."created_by_entity_id"
+
+Ref "entity_relationships_entity_id_fkey":"entities"."id" < "entity_relationships"."entity_id" [delete: cascade]
+
+Ref "entity_relationships_parent_entity_id_fkey":"entities"."id" < "entity_relationships"."parent_entity_id" [delete: restrict]
 
 Ref "files_uploaded_by_entity_id_fkey":"entities"."id" < "files"."uploaded_by_entity_id"
 
@@ -935,7 +1118,7 @@ Ref "vehicle_refuels_fuel_type_id_fkey":"fuel_types"."id" < "vehicle_refuels"."f
 
 Ref "vehicle_refuels_link_id_fkey":"links"."id" < "vehicle_refuels"."link_id"
 
-Ref "vehicle_refuels_registered_by_link_id_fkey":"links"."id" < "vehicle_refuels"."registered_by_link_id"
+Ref "vehicle_refuels_registered_by_entity_id_fkey":"entities"."id" < "vehicle_refuels"."registered_by_entity_id"
 
 Ref "vehicle_refuels_station_fuel_id_fkey":"station_fuels"."id" < "vehicle_refuels"."station_fuel_id"
 
