@@ -110,3 +110,95 @@ class VehicleLinksResponse(BaseModel):
     links: List[VehicleEntityLinkWithEntity]
     active_count: int
     total_count: int
+
+
+# Entity Relationship Schemas (pai-filho)
+class EntityRelationshipBase(BaseModel):
+    entity_id: uuid.UUID
+    parent_entity_id: uuid.UUID
+    relationship_type: str = "parent-child"
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    is_active: bool = True
+    reason: Optional[str] = None
+    observations: Optional[str] = None
+
+
+class EntityRelationshipCreate(BaseModel):
+    parent_entity_id: uuid.UUID
+    relationship_type: str = "parent-child"
+    reason: Optional[str] = None
+    observations: Optional[str] = None
+
+
+class EntityRelationshipUpdate(BaseModel):
+    end_date: Optional[datetime] = None
+    is_active: Optional[bool] = None
+    observations: Optional[str] = None
+
+
+class EntityRelationship(EntityRelationshipBase):
+    id: uuid.UUID
+    created_by_entity_id: Optional[uuid.UUID] = None
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class EntityRelationshipWithParent(EntityRelationship):
+    """Relacionamento com dados da entidade pai"""
+    parent_entity: Entity
+
+
+class EntityRelationshipWithChild(EntityRelationship):
+    """Relacionamento com dados da entidade filho"""
+    entity: Entity
+
+
+# ============================================================================
+# Link Advanced Schemas (para request, claim, grant)
+# ============================================================================
+
+class LinkRequest(BaseModel):
+    """Solicitação de vínculo a outra entidade"""
+    vehicle_id: uuid.UUID
+    requested_entity_id: uuid.UUID  # Entidade que receberá a solicitação
+    link_type_id: Optional[uuid.UUID] = None
+    relationship_type: Optional[RelationshipType] = None
+    reason: Optional[str] = None
+    observations: Optional[str] = None
+
+
+class LinkClaim(BaseModel):
+    """Reivindicação de vínculo com documentos"""
+    vehicle_id: uuid.UUID
+    link_type_id: Optional[uuid.UUID] = None
+    relationship_type: Optional[RelationshipType] = None
+    document_proof: str  # URL ou base64 do documento
+    observations: Optional[str] = None
+
+
+class LinkGrant(BaseModel):
+    """Concessão de vínculo a outra entidade"""
+    vehicle_id: uuid.UUID
+    granted_entity_id: uuid.UUID  # Entidade que receberá o vínculo
+    link_type_id: Optional[uuid.UUID] = None
+    relationship_type: Optional[RelationshipType] = None
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    observations: Optional[str] = None
+
+
+class LinkApproval(BaseModel):
+    """Aprovação/rejeição de solicitação"""
+    approved: bool
+    link_type_id: Optional[uuid.UUID] = None
+    observations: Optional[str] = None
+
+
+class LinkWithEntities(VehicleEntityLink):
+    """Vínculo com dados completos de entidade e veículo"""
+    entity: Optional[Entity] = None
+    vehicle: Optional[dict] = None

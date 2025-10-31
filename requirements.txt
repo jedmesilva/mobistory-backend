@@ -28,5 +28,9 @@ langchain-openai==0.0.1
 httpx==0.25.1
 python-dateutil==2.8.2
 
+# Upload de arquivos
+Pillow>=11.0.0
+python-multipart==0.0.6
+
 # Produção
 gunicorn==21.2.0

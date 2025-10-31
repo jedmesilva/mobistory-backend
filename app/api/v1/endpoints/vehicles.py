@@ -150,6 +150,46 @@ def update_vehicle(
     return vehicle
 
 
+@router.patch("/{vehicle_id}", response_model=VehicleWithDetails)
+def patch_vehicle(
+    vehicle_id: str,
+    vehicle_in: VehicleUpdate,
+    entity_id: Optional[str] = Header(None, alias="X-Entity-ID"),
+    db: Session = Depends(get_db),
+):
+    """
+    Atualizar PARCIALMENTE um veículo
+
+    Permite atualizar apenas os campos fornecidos, sem precisar enviar todos os dados.
+
+    - **vehicle_id**: ID do veículo
+    - **X-Entity-ID**: ID da entidade (opcional, via header)
+    """
+    query = db.query(Vehicle).filter(Vehicle.id == vehicle_id)
+
+    # Se entity_id fornecido, filtrar por entity
+    if entity_id:
+        query = query.filter(Vehicle.entity_id == entity_id)
+
+    vehicle = query.first()
+
+    if not vehicle:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Vehicle not found",
+        )
+
+    # Atualizar apenas campos fornecidos (exclude_unset ignora campos não enviados)
+    update_data = vehicle_in.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(vehicle, field, value)
+
+    db.commit()
+    db.refresh(vehicle)
+
+    return vehicle
+
+
 @router.delete("/{vehicle_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_vehicle(
     vehicle_id: str,

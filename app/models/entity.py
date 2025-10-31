@@ -1,36 +1,124 @@
-from sqlalchemy import Column, String, UUID, ForeignKey, DateTime, Boolean, Enum as SQLEnum
+from sqlalchemy import Column, String, UUID, ForeignKey, DateTime, Boolean, Enum as SQLEnum, Text, Date
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID as PGUUID
+from sqlalchemy.dialects.postgresql import UUID as PGUUID, JSONB
 import enum
-from datetime import datetime
+from datetime import datetime, date
 import uuid
 
 from app.core.database import Base
 from .base import BaseModel
 
 
-class EntityType(str, enum.Enum):
-    PERSON = "person"
-    COMPANY = "company"
-    AI_AGENT = "ai_agent"
+class EntityType(Base, BaseModel):
+    """Tipos de entidades (pessoa física, jurídica, etc.)"""
+    __tablename__ = "entity_types"
 
-
-class Entity(Base, BaseModel):
-    __tablename__ = "entities"
-
-    entity_type = Column(SQLEnum(EntityType), nullable=False)
+    code = Column(String, unique=True, nullable=False)
     name = Column(String, nullable=False)
-    email = Column(String, nullable=True)
-    phone = Column(String, nullable=True)
-    document_number = Column(String, nullable=True)
-    ai_model = Column(String, nullable=True)
-    ai_capabilities = Column(String, nullable=True)
+    description = Column(Text, nullable=True)
+    requires_cpf = Column(Boolean, default=False)
+    requires_cnpj = Column(Boolean, default=False)
+    requires_special_id = Column(Boolean, default=False)
     active = Column(Boolean, default=True)
 
     # Relationships
-    vehicle_links = relationship("VehicleEntityLink", back_populates="entity")
+    entities = relationship("Entity", back_populates="entity_type")
 
 
+class Entity(Base, BaseModel):
+    """Entidades (pessoas, empresas, etc.)"""
+    __tablename__ = "entities"
+
+    entity_code = Column(String, unique=True, nullable=False)
+    entity_type_id = Column(PGUUID(as_uuid=True), ForeignKey("entity_types.id"), nullable=True)
+    legal_id_number = Column(String, unique=True, nullable=True)  # CPF, CNPJ, etc
+    global_key_hash = Column(String, nullable=True)
+    display_name = Column(String, nullable=False)
+    email = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+    profile_picture_url = Column(Text, nullable=True)
+    extra_metadata = Column("metadata", JSONB, nullable=True)  # 'metadata' é reservado, usa alias
+    active = Column(Boolean, default=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    entity_type = relationship("EntityType", back_populates="entities")
+    vehicle_links = relationship("Link", back_populates="entity", foreign_keys="Link.entity_id")
+
+    # Relacionamentos pai-filho
+    children_relationships = relationship(
+        "EntityRelationship",
+        foreign_keys="EntityRelationship.parent_entity_id",
+        back_populates="parent_entity"
+    )
+    parent_relationships = relationship(
+        "EntityRelationship",
+        foreign_keys="EntityRelationship.entity_id",
+        back_populates="entity"
+    )
+
+
+class EntityRelationship(Base, BaseModel):
+    """Relacionamentos entre entidades (pai-filho)"""
+    __tablename__ = "entity_relationships"
+
+    entity_id = Column(PGUUID(as_uuid=True), ForeignKey("entities.id", ondelete="CASCADE"), nullable=False)
+    parent_entity_id = Column(PGUUID(as_uuid=True), ForeignKey("entities.id", ondelete="RESTRICT"), nullable=False)
+    relationship_type = Column(String, nullable=False)  # parent-child, guardian-ward, etc
+    start_date = Column(Date, nullable=False, default=date.today)
+    end_date = Column(Date, nullable=True)
+    is_active = Column(Boolean, default=True)
+    reason = Column(Text, nullable=True)
+    observations = Column(Text, nullable=True)
+    created_by_entity_id = Column(PGUUID(as_uuid=True), ForeignKey("entities.id"), nullable=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    entity = relationship("Entity", foreign_keys=[entity_id], back_populates="parent_relationships")
+    parent_entity = relationship("Entity", foreign_keys=[parent_entity_id], back_populates="children_relationships")
+    created_by = relationship("Entity", foreign_keys=[created_by_entity_id])
+
+
+class LinkType(Base, BaseModel):
+    """Tipos de vínculos (proprietário, condutor autorizado, etc.)"""
+    __tablename__ = "link_types"
+
+    code = Column(String, unique=True, nullable=False)
+    name = Column(String, nullable=False)
+    description = Column(Text, nullable=True)
+    permissions = Column(JSONB, nullable=True)
+    active = Column(Boolean, default=True)
+
+    # Relationships
+    links = relationship("Link", back_populates="link_type")
+
+
+class Link(Base, BaseModel):
+    """Vínculos entre entidades e veículos"""
+    __tablename__ = "links"
+
+    link_code = Column(String, unique=True, nullable=False)
+    entity_id = Column(PGUUID(as_uuid=True), ForeignKey("entities.id"), nullable=True)
+    vehicle_id = Column(PGUUID(as_uuid=True), ForeignKey("vehicles.id"), nullable=True)
+    link_type_id = Column(PGUUID(as_uuid=True), ForeignKey("link_types.id"), nullable=True)
+    own_key_hash = Column(String, nullable=True)
+    uses_own_key = Column(Boolean, default=False)
+    status = Column(String, nullable=True)  # pending, active, suspended, terminated
+    document_proof = Column(Text, nullable=True)
+    validated_at = Column(DateTime, nullable=True)
+    validated_by = Column(PGUUID(as_uuid=True), ForeignKey("links.id"), nullable=True)
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
+    observations = Column(Text, nullable=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    entity = relationship("Entity", back_populates="vehicle_links", foreign_keys=[entity_id])
+    vehicle = relationship("Vehicle", back_populates="entity_links", foreign_keys=[vehicle_id])
+    link_type = relationship("LinkType", back_populates="links")
+
+
+# Enums para compatibilidade com código antigo
 class RelationshipType(str, enum.Enum):
     OWNER = "owner"
     CO_OWNER = "co_owner"
@@ -47,18 +135,5 @@ class LinkStatus(str, enum.Enum):
     PENDING = "pending"
 
 
-class VehicleEntityLink(Base, BaseModel):
-    __tablename__ = "vehicle_entity_links"
-
-    vehicle_id = Column(PGUUID(as_uuid=True), ForeignKey("vehicles.id"), nullable=False)
-    entity_id = Column(PGUUID(as_uuid=True), ForeignKey("entities.id"), nullable=False)
-    relationship_type = Column(SQLEnum(RelationshipType), nullable=False)
-    status = Column(SQLEnum(LinkStatus), default=LinkStatus.ACTIVE)
-    start_date = Column(DateTime, nullable=False)
-    end_date = Column(DateTime, nullable=True)
-    notes = Column(String, nullable=True)
-    active = Column(Boolean, default=True)
-
-    # Relationships
-    vehicle = relationship("Vehicle", back_populates="entity_links")
-    entity = relationship("Entity", back_populates="vehicle_links")
+# Alias para compatibilidade com código antigo
+VehicleEntityLink = Link
