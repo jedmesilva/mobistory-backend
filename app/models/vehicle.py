@@ -98,4 +98,4 @@ class Vehicle(Base, BaseModel):
     brand = relationship("Brand", back_populates="vehicles")
     model = relationship("Model", back_populates="vehicles")
     version = relationship("ModelVersion", back_populates="vehicles")
-    entity_links = relationship("VehicleEntityLink", back_populates="vehicle")
+    entity_links = relationship("Link", back_populates="vehicle")

@@ -91,12 +91,21 @@ class Plate(PlateBase):
 
 # Vehicle schemas
 class VehicleBase(BaseModel):
-    brand_id: UUID
-    model_id: UUID
+    vin: Optional[str] = None
+    renavam: Optional[str] = None
+    brand_id: Optional[UUID] = None
+    model_id: Optional[UUID] = None
     version_id: Optional[UUID] = None
-    color_id: Optional[UUID] = None
-    year: Optional[int] = None
-    nickname: Optional[str] = None
+    custom_brand: Optional[str] = None
+    custom_model: Optional[str] = None
+    custom_version: Optional[str] = None
+    manufacturing_year: Optional[int] = None
+    model_year: Optional[int] = None
+    current_color: Optional[str] = None
+    current_plate: Optional[str] = None
+    current_km: Optional[int] = None
+    visibility: Optional[str] = "private"
+    observations: Optional[str] = None
 
 
 class VehicleCreate(VehicleBase):
@@ -104,19 +113,25 @@ class VehicleCreate(VehicleBase):
 
 
 class VehicleUpdate(BaseModel):
+    vin: Optional[str] = None
+    renavam: Optional[str] = None
     brand_id: Optional[UUID] = None
     model_id: Optional[UUID] = None
     version_id: Optional[UUID] = None
-    color_id: Optional[UUID] = None
-    year: Optional[int] = None
-    nickname: Optional[str] = None
-    is_active: Optional[bool] = None
+    custom_brand: Optional[str] = None
+    custom_model: Optional[str] = None
+    custom_version: Optional[str] = None
+    manufacturing_year: Optional[int] = None
+    model_year: Optional[int] = None
+    current_color: Optional[str] = None
+    current_plate: Optional[str] = None
+    current_km: Optional[int] = None
+    visibility: Optional[str] = None
+    observations: Optional[str] = None
 
 
 class Vehicle(VehicleBase):
     id: UUID
-    user_id: UUID
-    is_active: bool
     created_at: datetime
     updated_at: datetime
 
@@ -128,7 +143,6 @@ class VehicleWithDetails(Vehicle):
     brand: Optional[Brand] = None
     model: Optional[Model] = None
     version: Optional[ModelVersion] = None
-    color: Optional[Color] = None
-    plates: List[Plate] = []
+    entity_links: List = []
 
     model_config = ConfigDict(from_attributes=True)

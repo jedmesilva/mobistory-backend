@@ -27,13 +27,7 @@ def list_vehicles(
     - **limit**: Limite de registros retornados
     - **X-Entity-ID**: ID da entidade (opcional, via header)
     """
-    query = db.query(Vehicle).filter(Vehicle.active == True)
-
-    # Se entity_id fornecido, filtrar por entity
-    if entity_id:
-        query = query.filter(Vehicle.entity_id == entity_id)
-
-    vehicles = query.offset(skip).limit(limit).all()
+    vehicles = db.query(Vehicle).offset(skip).limit(limit).all()
     return vehicles
 
 
@@ -86,22 +80,14 @@ def create_vehicle(
 @router.get("/{vehicle_id}", response_model=VehicleWithDetails)
 def get_vehicle(
     vehicle_id: str,
-    entity_id: Optional[str] = Header(None, alias="X-Entity-ID"),
     db: Session = Depends(get_db),
 ):
     """
     Obter um veículo específico por ID
 
     - **vehicle_id**: ID do veículo
-    - **X-Entity-ID**: ID da entidade (opcional, via header)
     """
-    query = db.query(Vehicle).filter(Vehicle.id == vehicle_id)
-
-    # Se entity_id fornecido, filtrar por entity
-    if entity_id:
-        query = query.filter(Vehicle.entity_id == entity_id)
-
-    vehicle = query.first()
+    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
 
     if not vehicle:
         raise HTTPException(
@@ -116,22 +102,14 @@ def get_vehicle(
 def update_vehicle(
     vehicle_id: str,
     vehicle_in: VehicleUpdate,
-    entity_id: Optional[str] = Header(None, alias="X-Entity-ID"),
     db: Session = Depends(get_db),
 ):
     """
     Atualizar um veículo existente
 
     - **vehicle_id**: ID do veículo
-    - **X-Entity-ID**: ID da entidade (opcional, via header)
     """
-    query = db.query(Vehicle).filter(Vehicle.id == vehicle_id)
-
-    # Se entity_id fornecido, filtrar por entity
-    if entity_id:
-        query = query.filter(Vehicle.entity_id == entity_id)
-
-    vehicle = query.first()
+    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
 
     if not vehicle:
         raise HTTPException(
@@ -154,7 +132,6 @@ def update_vehicle(
 def patch_vehicle(
     vehicle_id: str,
     vehicle_in: VehicleUpdate,
-    entity_id: Optional[str] = Header(None, alias="X-Entity-ID"),
     db: Session = Depends(get_db),
 ):
     """
@@ -163,15 +140,8 @@ def patch_vehicle(
     Permite atualizar apenas os campos fornecidos, sem precisar enviar todos os dados.
 
     - **vehicle_id**: ID do veículo
-    - **X-Entity-ID**: ID da entidade (opcional, via header)
     """
-    query = db.query(Vehicle).filter(Vehicle.id == vehicle_id)
-
-    # Se entity_id fornecido, filtrar por entity
-    if entity_id:
-        query = query.filter(Vehicle.entity_id == entity_id)
-
-    vehicle = query.first()
+    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
 
     if not vehicle:
         raise HTTPException(
@@ -193,24 +163,14 @@ def patch_vehicle(
 @router.delete("/{vehicle_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_vehicle(
     vehicle_id: str,
-    entity_id: Optional[str] = Header(None, alias="X-Entity-ID"),
     db: Session = Depends(get_db),
 ):
     """
-    Deletar (desativar) um veículo
-
-    Faz soft delete, apenas marca como active=False
+    Deletar um veículo
 
     - **vehicle_id**: ID do veículo
-    - **X-Entity-ID**: ID da entidade (opcional, via header)
     """
-    query = db.query(Vehicle).filter(Vehicle.id == vehicle_id)
-
-    # Se entity_id fornecido, filtrar por entity
-    if entity_id:
-        query = query.filter(Vehicle.entity_id == entity_id)
-
-    vehicle = query.first()
+    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
 
     if not vehicle:
         raise HTTPException(
@@ -218,8 +178,8 @@ def delete_vehicle(
             detail="Vehicle not found",
         )
 
-    # Soft delete
-    vehicle.active = False
+    # Hard delete
+    db.delete(vehicle)
     db.commit()
 
     return None
