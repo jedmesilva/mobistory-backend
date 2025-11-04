@@ -6,9 +6,16 @@ import uuid
 
 class BaseModel:
     """
-    Base model com campos comuns para todas as tabelas
+    Base model com apenas id e created_at
     """
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class BaseModelWithUpdate(BaseModel):
+    """
+    Base model com id, created_at e updated_at
+    """
+
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)

@@ -6,7 +6,7 @@ from datetime import datetime, date
 import uuid
 
 from app.core.database import Base
-from .base import BaseModel
+from .base import BaseModel, BaseModelWithUpdate
 
 
 class EntityType(Base, BaseModel):
@@ -25,7 +25,7 @@ class EntityType(Base, BaseModel):
     entities = relationship("Entity", back_populates="entity_type")
 
 
-class Entity(Base, BaseModel):
+class Entity(Base, BaseModelWithUpdate):
     """Entidades (pessoas, empresas, etc.)"""
     __tablename__ = "entities"
 
@@ -39,7 +39,6 @@ class Entity(Base, BaseModel):
     profile_picture_url = Column(Text, nullable=True)
     extra_metadata = Column("metadata", JSONB, nullable=True)  # 'metadata' é reservado, usa alias
     active = Column(Boolean, default=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
     entity_type = relationship("EntityType", back_populates="entities")
@@ -58,7 +57,7 @@ class Entity(Base, BaseModel):
     )
 
 
-class EntityRelationship(Base, BaseModel):
+class EntityRelationship(Base, BaseModelWithUpdate):
     """Relacionamentos entre entidades (pai-filho)"""
     __tablename__ = "entity_relationships"
 
@@ -71,7 +70,6 @@ class EntityRelationship(Base, BaseModel):
     reason = Column(Text, nullable=True)
     observations = Column(Text, nullable=True)
     created_by_entity_id = Column(PGUUID(as_uuid=True), ForeignKey("entities.id"), nullable=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
     entity = relationship("Entity", foreign_keys=[entity_id], back_populates="parent_relationships")
@@ -93,7 +91,7 @@ class LinkType(Base, BaseModel):
     links = relationship("Link", back_populates="link_type")
 
 
-class Link(Base, BaseModel):
+class Link(Base, BaseModelWithUpdate):
     """Vínculos entre entidades e veículos"""
     __tablename__ = "links"
 
@@ -110,7 +108,6 @@ class Link(Base, BaseModel):
     start_date = Column(Date, nullable=True)
     end_date = Column(Date, nullable=True)
     observations = Column(Text, nullable=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
     entity = relationship("Entity", back_populates="vehicle_links", foreign_keys=[entity_id])

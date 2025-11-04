@@ -1,14 +1,14 @@
-from sqlalchemy import Column, String, UUID, ForeignKey, DateTime, Boolean, Integer, Text
+from sqlalchemy import Column, String, UUID, ForeignKey, DateTime, Boolean, Integer, Text, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from datetime import datetime
 import uuid
 
 from app.core.database import Base
-from .base import BaseModel
+from .base import BaseModel, BaseModelWithUpdate
 
 
-class Brand(Base, BaseModel):
+class Brand(Base, BaseModelWithUpdate):
     """Marcas de veículos (Toyota, Ford, etc.)"""
     __tablename__ = "brands"
 
@@ -16,13 +16,14 @@ class Brand(Base, BaseModel):
     country_of_origin = Column(String, nullable=True)
     logo_url = Column(Text, nullable=True)
     active = Column(Boolean, default=True)
+    verified = Column(Boolean, default=False)  # Marca verificada por admin
 
     # Relationships
     models = relationship("Model", back_populates="brand")
     vehicles = relationship("Vehicle", back_populates="brand")
 
 
-class Model(Base, BaseModel):
+class Model(Base, BaseModelWithUpdate):
     """Modelos de veículos (Corolla, F-150, etc.)"""
     __tablename__ = "models"
 
@@ -30,6 +31,7 @@ class Model(Base, BaseModel):
     name = Column(String, nullable=False)
     category = Column(String, nullable=True)
     active = Column(Boolean, default=True)
+    verified = Column(Boolean, default=False)  # Modelo verificado por admin
 
     # Relationships
     brand = relationship("Brand", back_populates="models")
@@ -37,7 +39,7 @@ class Model(Base, BaseModel):
     vehicles = relationship("Vehicle", back_populates="model")
 
 
-class ModelVersion(Base, BaseModel):
+class ModelVersion(Base, BaseModelWithUpdate):
     """Versões de modelos (Corolla XEi, F-150 XLT, etc.)"""
     __tablename__ = "model_versions"
 
@@ -56,13 +58,14 @@ class ModelVersion(Base, BaseModel):
     tank_capacity_liters = Column(Integer, nullable=True)
     trunk_capacity_liters = Column(Integer, nullable=True)
     active = Column(Boolean, default=True)
+    verified = Column(Boolean, default=False)  # Versão verificada por admin
 
     # Relationships
     model = relationship("Model", back_populates="versions")
     vehicles = relationship("Vehicle", back_populates="version")
 
 
-class Vehicle(Base, BaseModel):
+class Vehicle(Base, BaseModelWithUpdate):
     """Veículos cadastrados"""
     __tablename__ = "vehicles"
 
@@ -91,11 +94,64 @@ class Vehicle(Base, BaseModel):
     visibility = Column(String, default="private")  # private, public, restricted
     observations = Column(Text, nullable=True)
 
-    # Timestamps
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
     # Relationships
     brand = relationship("Brand", back_populates="vehicles")
     model = relationship("Model", back_populates="vehicles")
     version = relationship("ModelVersion", back_populates="vehicles")
     entity_links = relationship("Link", back_populates="vehicle")
+    plates = relationship("Plate", back_populates="vehicle")
+    colors = relationship("Color", back_populates="vehicle")
+
+
+class PlateType(Base, BaseModelWithUpdate):
+    """Tipos de placas (Mercosul, Antiga, etc.)"""
+    __tablename__ = "plate_types"
+
+    code = Column(String, unique=True, nullable=False)
+    name = Column(String, nullable=False)
+    description = Column(Text, nullable=True)
+    country = Column(String, nullable=False)
+    format_pattern = Column(String, nullable=True)
+    format_example = Column(String, nullable=True)
+    active = Column(Boolean, default=True)
+
+    # Relationships
+    plates = relationship("Plate", back_populates="plate_type")
+
+
+class Plate(Base, BaseModelWithUpdate):
+    """Placas de veículos (histórico)"""
+    __tablename__ = "plates"
+
+    vehicle_id = Column(PGUUID(as_uuid=True), ForeignKey("vehicles.id"), nullable=False)
+    plate_type_id = Column(PGUUID(as_uuid=True), ForeignKey("plate_types.id"), nullable=False)
+    plate_number = Column(String, nullable=False)
+    licensing_date = Column(Date, nullable=True)
+    licensing_country = Column(String, nullable=True)
+    state = Column(String, nullable=True)
+    city = Column(String, nullable=True)
+    status = Column(String, nullable=True)
+    end_date = Column(Date, nullable=True)
+    created_by_entity_id = Column(PGUUID(as_uuid=True), nullable=True)
+    active = Column(Boolean, default=True)
+
+    # Relationships
+    vehicle = relationship("Vehicle", back_populates="plates")
+    plate_type = relationship("PlateType", back_populates="plates")
+
+
+class Color(Base, BaseModelWithUpdate):
+    """Cores de veículos (histórico)"""
+    __tablename__ = "colors"
+
+    vehicle_id = Column(PGUUID(as_uuid=True), ForeignKey("vehicles.id"), nullable=False)
+    color = Column(String, nullable=False)
+    hex_code = Column(String, nullable=True)
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
+    created_by_entity_id = Column(PGUUID(as_uuid=True), nullable=True)
+    active = Column(Boolean, default=True)
+    description = Column(Text, nullable=True)
+
+    # Relationships
+    vehicle = relationship("Vehicle", back_populates="colors")

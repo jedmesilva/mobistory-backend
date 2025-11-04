@@ -30,11 +30,11 @@ api_router.include_router(
     tags=["vehicles"],
 )
 
-# Brands, Models e Versions (dados base)
+# Brands, Models e Versions (hierarquia aninhada)
 api_router.include_router(
     brands.router,
-    prefix="/catalog",
-    tags=["catalog"],
+    prefix="/brands",
+    tags=["brands"],
 )
 
 # Conversas
