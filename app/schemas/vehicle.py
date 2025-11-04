@@ -10,8 +10,12 @@ class PlateTypeBase(BaseModel):
     name: str
     description: Optional[str] = None
     country: str
+    category: Optional[str] = None
     format_pattern: Optional[str] = None
     format_example: Optional[str] = None
+    plate_color_name: Optional[str] = None
+    background_color_hex: Optional[str] = None
+    text_color_hex: Optional[str] = None
 
 
 class PlateTypeCreate(PlateTypeBase):

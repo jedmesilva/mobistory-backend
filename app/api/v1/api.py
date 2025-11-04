@@ -5,6 +5,7 @@ from app.api.v1.endpoints import (
     conversations,
     messages,
     brands,
+    plate_types,
     fueling,
     maintenance,
     websocket,
@@ -35,6 +36,13 @@ api_router.include_router(
     brands.router,
     prefix="/brands",
     tags=["brands"],
+)
+
+# Plate Types (Tipos de placas)
+api_router.include_router(
+    plate_types.router,
+    prefix="/plate-types",
+    tags=["plate-types"],
 )
 
 # Conversas

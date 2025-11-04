@@ -111,8 +111,12 @@ class PlateType(Base, BaseModelWithUpdate):
     name = Column(String, nullable=False)
     description = Column(Text, nullable=True)
     country = Column(String, nullable=False)
+    category = Column(String, nullable=True)  # particular, comercial, oficial, etc
     format_pattern = Column(String, nullable=True)
     format_example = Column(String, nullable=True)
+    plate_color_name = Column(String, nullable=True)  # Nome da cor (ex: "Cinza", "Branca")
+    background_color_hex = Column(String, nullable=True)  # Cor de fundo (#808080)
+    text_color_hex = Column(String, nullable=True)  # Cor do texto (#000000)
     active = Column(Boolean, default=True)
 
     # Relationships
