@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime, date
 from app.core.database import get_db
-from app.models import Vehicle, Brand, Model, Plate, PlateType, Color, Link, LinkType
+from app.models import Vehicle, Brand, Model, Plate, PlateType, Color, VehicleColor, Link, LinkType
 from app.schemas import (
     Vehicle as VehicleSchema,
     VehicleCreate,
@@ -51,73 +51,93 @@ def create_vehicle(
     Tudo em uma única transação.
     """
     print("=== CREATE_VEHICLE CHAMADO ===")
+    print(f"Dados recebidos: {vehicle_in.model_dump()}")
     try:
         # Extrair campos específicos que não vão direto para o veículo
         vehicle_data = vehicle_in.model_dump(exclude={
-            'plate_number', 'plate_type_id', 'licensing_date', 'licensing_country',
-            'plate_state', 'plate_city', 'color', 'hex_code', 'color_description',
+            'plate_number', 'plate_type_id', 'plate_model_id', 'licensing_start_date',
+            'licensing_end_date', 'licensing_country', 'plate_state', 'plate_city', 'color_id',
             'entity_id', 'link_type_id'
         })
+        print(f">>> [Backend] Dados do veículo após exclusão: {vehicle_data}")
 
         # Limpar campos None que não devem ser passados ao Vehicle
         vehicle_data = {k: v for k, v in vehicle_data.items() if v is not None}
+        print(f">>> [Backend] Dados do veículo após limpeza de None: {vehicle_data}")
 
         # Validar lógica de brand: ou usa catalog OU custom
+        print(f">>> [Backend] Validando brand_id: {vehicle_data.get('brand_id')}")
         if vehicle_data.get('brand_id'):
             # Validar se brand existe
             brand = db.query(Brand).filter(Brand.id == vehicle_data['brand_id']).first()
             if not brand:
+                print(f"❌ [Backend] Brand não encontrada: {vehicle_data['brand_id']}")
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail=f"Brand with id {vehicle_data['brand_id']} not found"
                 )
+            print(f"✓ [Backend] Brand encontrada: {brand.name}")
         elif not vehicle_data.get('custom_brand'):
+            print("❌ [Backend] Nem brand_id nem custom_brand fornecidos")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Either brand_id or custom_brand must be provided"
             )
 
         # Validar lógica de model: ou usa catalog OU custom
+        print(f">>> [Backend] Validando model_id: {vehicle_data.get('model_id')}")
         if vehicle_data.get('model_id'):
             # Validar se model existe
             model = db.query(Model).filter(Model.id == vehicle_data['model_id']).first()
             if not model:
+                print(f"❌ [Backend] Model não encontrado: {vehicle_data['model_id']}")
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail=f"Model with id {vehicle_data['model_id']} not found"
                 )
+            print(f"✓ [Backend] Model encontrado: {model.name}")
         elif not vehicle_data.get('custom_model'):
+            print("❌ [Backend] Nem model_id nem custom_model fornecidos")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Either model_id or custom_model must be provided"
             )
 
         # 1. Criar veículo
+        print(">>> [Backend] [1/4] Criando registro de veículo...")
         vehicle = Vehicle(**vehicle_data)
         db.add(vehicle)
         db.flush()  # Flush para obter o ID do veículo sem commitar
+        print(f"✓ [Backend] Veículo criado com ID: {vehicle.id}")
 
         # 2. Criar placa se fornecida
         if vehicle_in.plate_number:
+            print(f">>> [Backend] [2/4] Criando placa: {vehicle_in.plate_number}")
             if not vehicle_in.plate_type_id:
+                print("❌ [Backend] plate_type_id não fornecido")
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="plate_type_id is required when plate_number is provided"
                 )
 
             # Validar se plate_type existe
+            print(f">>> [Backend] Validando plate_type_id: {vehicle_in.plate_type_id}")
             plate_type = db.query(PlateType).filter(PlateType.id == vehicle_in.plate_type_id).first()
             if not plate_type:
+                print(f"❌ [Backend] PlateType não encontrado: {vehicle_in.plate_type_id}")
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail=f"PlateType with id {vehicle_in.plate_type_id} not found"
                 )
+            print(f"✓ [Backend] PlateType encontrado: {plate_type.name}")
 
             plate = Plate(
                 vehicle_id=vehicle.id,
                 plate_type_id=vehicle_in.plate_type_id,
+                plate_model_id=vehicle_in.plate_model_id if vehicle_in.plate_model_id else None,
                 plate_number=vehicle_in.plate_number,
-                licensing_date=vehicle_in.licensing_date,
+                licensing_start_date=vehicle_in.licensing_start_date,
+                licensing_end_date=vehicle_in.licensing_end_date,
                 licensing_country=vehicle_in.licensing_country,
                 state=vehicle_in.plate_state,
                 city=vehicle_in.plate_city,
@@ -126,29 +146,44 @@ def create_vehicle(
                 created_by_entity_id=vehicle_in.entity_id if vehicle_in.entity_id else None
             )
             db.add(plate)
+            print(f"✓ [Backend] Placa criada")
 
             # Atualizar current_plate do veículo
             vehicle.current_plate = vehicle_in.plate_number
+        else:
+            print(">>> [Backend] [2/4] Nenhuma placa fornecida, pulando...")
 
-        # 3. Criar cor se fornecida
-        if vehicle_in.color:
-            color = Color(
+        # 3. Criar relacionamento veículo-cor se fornecido
+        if vehicle_in.color_id:
+            print(f">>> [Backend] [3/4] Criando relacionamento com cor: {vehicle_in.color_id}")
+            # Validar se color existe
+            color = db.query(Color).filter(Color.id == vehicle_in.color_id).first()
+            if not color:
+                print(f"❌ [Backend] Color não encontrada: {vehicle_in.color_id}")
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Color with id {vehicle_in.color_id} not found"
+                )
+            print(f"✓ [Backend] Color encontrada: {color.name}")
+
+            vehicle_color = VehicleColor(
                 vehicle_id=vehicle.id,
-                color=vehicle_in.color,
-                hex_code=vehicle_in.hex_code,
-                description=vehicle_in.color_description,
-                start_date=date.today(),
-                active=True,
-                created_by_entity_id=vehicle_in.entity_id if vehicle_in.entity_id else None
+                color_id=vehicle_in.color_id,
+                is_primary=True
             )
-            db.add(color)
+            db.add(vehicle_color)
+            print(f"✓ [Backend] VehicleColor criado")
 
-            # Atualizar current_color do veículo
-            vehicle.current_color = vehicle_in.color
+            # Atualizar current_color do veículo com o nome da cor
+            vehicle.current_color = color.name
+        else:
+            print(">>> [Backend] [3/4] Nenhuma cor fornecida, pulando...")
 
         # 4. Criar link com entidade se fornecido
         if vehicle_in.entity_id:
+            print(f">>> [Backend] [4/4] Criando link com entidade: {vehicle_in.entity_id}")
             if not vehicle_in.link_type_id:
+                print("❌ [Backend] link_type_id não fornecido")
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="link_type_id is required when entity_id is provided"
@@ -157,10 +192,12 @@ def create_vehicle(
             # Validar se link_type existe
             link_type = db.query(LinkType).filter(LinkType.id == vehicle_in.link_type_id).first()
             if not link_type:
+                print(f"❌ [Backend] LinkType não encontrado: {vehicle_in.link_type_id}")
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
                     detail=f"LinkType with id {vehicle_in.link_type_id} not found"
                 )
+            print(f"✓ [Backend] LinkType encontrado: {link_type.name}")
 
             # Gerar link_code único
             import uuid
@@ -175,9 +212,14 @@ def create_vehicle(
                 start_date=date.today()
             )
             db.add(link)
+            print(f"✓ [Backend] Link criado com código: {link_code}")
+        else:
+            print(">>> [Backend] [4/4] Nenhum link com entidade fornecido, pulando...")
 
         # Commit de toda a transação
+        print(">>> [Backend] Commitando transação no banco de dados...")
         db.commit()
+        print("✓✓✓ [Backend] VEÍCULO CRIADO COM SUCESSO ✓✓✓")
 
         # Recarregar veículo sem eager loading dos relationships
         db.expire(vehicle)
@@ -185,9 +227,16 @@ def create_vehicle(
         return vehicle
 
     except HTTPException:
+        print(f"❌ [Backend] HTTPException capturada, fazendo rollback")
         db.rollback()
         raise
     except Exception as e:
+        print(f"❌❌❌ [Backend] ERRO INESPERADO ❌❌❌")
+        print(f"Tipo: {type(e).__name__}")
+        print(f"Mensagem: {str(e)}")
+        print(f"Stack trace completa:")
+        import traceback
+        traceback.print_exc()
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

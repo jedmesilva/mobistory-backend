@@ -4,22 +4,59 @@ from datetime import datetime, date
 from uuid import UUID
 
 
+# PlateModel schemas
+class PlateModelBase(BaseModel):
+    code: str
+    name: str
+    country: str
+    region_code: str
+    region_type: str
+    description: Optional[str] = None
+    format_pattern: Optional[str] = None
+    format_regex: Optional[str] = None
+    format_example: Optional[str] = None
+    valid_from: Optional[date] = None
+    valid_until: Optional[date] = None
+    has_qrcode: bool = False
+    has_chip: bool = False
+
+
+class PlateModelCreate(PlateModelBase):
+    pass
+
+
+class PlateModel(PlateModelBase):
+    id: UUID
+    active: bool = True
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 # PlateType schemas
 class PlateTypeBase(BaseModel):
+    plate_model_id: UUID
     code: str
     name: str
     description: Optional[str] = None
-    country: str
-    category: Optional[str] = None
-    format_pattern: Optional[str] = None
-    format_example: Optional[str] = None
-    plate_color_name: Optional[str] = None
-    background_color_hex: Optional[str] = None
-    text_color_hex: Optional[str] = None
+    color_code: str
+    background_color: Optional[str] = None
+    text_color: Optional[str] = None
+    border_color: Optional[str] = None
+    vehicle_category: Optional[str] = None
+    requires_special_license: bool = False
+    valid_from: Optional[date] = None
+    valid_until: Optional[date] = None
 
 
 class PlateTypeCreate(PlateTypeBase):
     pass
+
+
+# Plate Detection Request
+class PlateDetectionRequest(BaseModel):
+    plate_number: str
 
 
 class PlateType(PlateTypeBase):
@@ -34,7 +71,8 @@ class PlateType(PlateTypeBase):
 # Plate schemas
 class PlateBase(BaseModel):
     plate_number: str
-    licensing_date: Optional[date] = None
+    licensing_start_date: Optional[date] = None
+    licensing_end_date: Optional[date] = None
     licensing_country: Optional[str] = None
     state: Optional[str] = None
     city: Optional[str] = None
@@ -44,6 +82,7 @@ class PlateBase(BaseModel):
 class PlateCreate(PlateBase):
     vehicle_id: UUID
     plate_type_id: UUID
+    plate_model_id: Optional[UUID] = None
     created_by_entity_id: Optional[UUID] = None
 
 
@@ -51,6 +90,7 @@ class Plate(PlateBase):
     id: UUID
     vehicle_id: UUID
     plate_type_id: UUID
+    plate_model_id: Optional[UUID] = None
     end_date: Optional[date] = None
     created_by_entity_id: Optional[UUID] = None
     active: bool = True
@@ -60,30 +100,6 @@ class Plate(PlateBase):
     model_config = ConfigDict(from_attributes=True)
 
 
-# Color schemas
-class ColorBase(BaseModel):
-    color: str
-    hex_code: Optional[str] = None
-    description: Optional[str] = None
-
-
-class ColorCreate(ColorBase):
-    vehicle_id: UUID
-    start_date: Optional[date] = None
-    created_by_entity_id: Optional[UUID] = None
-
-
-class Color(ColorBase):
-    id: UUID
-    vehicle_id: UUID
-    start_date: Optional[date] = None
-    end_date: Optional[date] = None
-    created_by_entity_id: Optional[UUID] = None
-    active: bool = True
-    created_at: datetime
-    updated_at: datetime
-
-    model_config = ConfigDict(from_attributes=True)
 
 
 # Brand schemas
@@ -187,37 +203,66 @@ class ModelVersion(ModelVersionBase):
     model_config = ConfigDict(from_attributes=True)
 
 
-# Color schemas
+# Color schemas (Master Catalog)
 class ColorBase(BaseModel):
-    color: str
+    name: str
+    description: Optional[str] = None
     hex_code: Optional[str] = None
+    rgb_r: Optional[int] = None
+    rgb_g: Optional[int] = None
+    rgb_b: Optional[int] = None
+    cmyk_c: Optional[int] = None
+    cmyk_m: Optional[int] = None
+    cmyk_y: Optional[int] = None
+    cmyk_k: Optional[int] = None
+    finish_type: Optional[str] = None  # solid, metallic, pearlescent, matte, glossy
 
 
 class ColorCreate(ColorBase):
     pass
 
 
+class ColorUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    hex_code: Optional[str] = None
+    rgb_r: Optional[int] = None
+    rgb_g: Optional[int] = None
+    rgb_b: Optional[int] = None
+    cmyk_c: Optional[int] = None
+    cmyk_m: Optional[int] = None
+    cmyk_y: Optional[int] = None
+    cmyk_k: Optional[int] = None
+    finish_type: Optional[str] = None
+
+
 class Color(ColorBase):
     id: UUID
+    verified: bool = False
+    active: bool = True
+    created_by: Optional[UUID] = None
+    verified_by: Optional[UUID] = None
+    verified_at: Optional[datetime] = None
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
 
 
-# Plate schemas
-class PlateBase(BaseModel):
-    plate: str
-    is_current: bool = True
-
-
-class PlateCreate(PlateBase):
+# VehicleColor schemas (Relationship/History)
+class VehicleColorBase(BaseModel):
     vehicle_id: UUID
+    color_id: UUID
+    is_primary: bool = True
 
 
-class Plate(PlateBase):
+class VehicleColorCreate(VehicleColorBase):
+    pass
+
+
+class VehicleColor(VehicleColorBase):
     id: UUID
-    vehicle_id: UUID
     created_at: datetime
+    updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -245,15 +290,15 @@ class VehicleCreate(VehicleBase):
     # Campos para criação de placa (opcional)
     plate_number: Optional[str] = None
     plate_type_id: Optional[UUID] = None
-    licensing_date: Optional[date] = None
+    plate_model_id: Optional[UUID] = None
+    licensing_start_date: Optional[date] = None
+    licensing_end_date: Optional[date] = None
     licensing_country: Optional[str] = None
     plate_state: Optional[str] = None
     plate_city: Optional[str] = None
 
-    # Campos para criação de cor (opcional)
-    color: Optional[str] = None
-    hex_code: Optional[str] = None
-    color_description: Optional[str] = None
+    # Campo para criar relacionamento cor-veículo (opcional)
+    color_id: Optional[UUID] = None
 
     # Campo para criar link com entidade (opcional)
     entity_id: Optional[UUID] = None

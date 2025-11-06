@@ -100,26 +100,53 @@ class Vehicle(Base, BaseModelWithUpdate):
     version = relationship("ModelVersion", back_populates="vehicles")
     entity_links = relationship("Link", back_populates="vehicle")
     plates = relationship("Plate", back_populates="vehicle")
-    colors = relationship("Color", back_populates="vehicle")
+    vehicle_colors = relationship("VehicleColor", back_populates="vehicle")
 
 
-class PlateType(Base, BaseModelWithUpdate):
-    """Tipos de placas (Mercosul, Antiga, etc.)"""
-    __tablename__ = "plate_types"
+class PlateModel(Base, BaseModelWithUpdate):
+    """Modelos/Padrões de placas (Mercosul, Antigo, etc.)"""
+    __tablename__ = "plate_models"
 
-    code = Column(String, unique=True, nullable=False)
-    name = Column(String, nullable=False)
+    code = Column(String, unique=True, nullable=False)  # BR_MERCOSUL, BR_OLD_STANDARD
+    name = Column(String, nullable=False)  # Mercosul, Padrão Antigo
+    country = Column(String, nullable=False)  # BR, US, AR
+    region_code = Column(String(10), nullable=False)  # BR, CA, SP, etc.
+    region_type = Column(String(20), nullable=False)  # national, state, province, city, district
     description = Column(Text, nullable=True)
-    country = Column(String, nullable=False)
-    category = Column(String, nullable=True)  # particular, comercial, oficial, etc
-    format_pattern = Column(String, nullable=True)
-    format_example = Column(String, nullable=True)
-    plate_color_name = Column(String, nullable=True)  # Nome da cor (ex: "Cinza", "Branca")
-    background_color_hex = Column(String, nullable=True)  # Cor de fundo (#808080)
-    text_color_hex = Column(String, nullable=True)  # Cor do texto (#000000)
+    format_pattern = Column(String, nullable=True)  # AAA0A00 (visual)
+    format_regex = Column(String, nullable=True)  # ^[A-Z]{3}[0-9][A-Z][0-9]{2}$
+    format_example = Column(String, nullable=True)  # ABC1D23
+    valid_from = Column(Date, nullable=True)  # Data início vigência
+    valid_until = Column(Date, nullable=True)  # Data fim (null se vigente)
+    has_qrcode = Column(Boolean, default=False)  # Mercosul tem QR Code
+    has_chip = Column(Boolean, default=False)  # Algumas têm chip RFID
     active = Column(Boolean, default=True)
 
     # Relationships
+    plate_types = relationship("PlateType", back_populates="plate_model")
+    plates = relationship("Plate", back_populates="plate_model")
+
+
+class PlateType(Base, BaseModelWithUpdate):
+    """Tipos/Categorias de placas (Particular, Comercial, Oficial, etc.)"""
+    __tablename__ = "plate_types"
+
+    plate_model_id = Column(PGUUID(as_uuid=True), ForeignKey("plate_models.id"), nullable=False)
+    code = Column(String, unique=True, nullable=False)  # BR_MERCOSUL_PARTICULAR
+    name = Column(String, nullable=False)  # Particular
+    description = Column(Text, nullable=True)
+    color_code = Column(String, nullable=False)  # WHITE, RED, BLACK
+    background_color = Column(String, nullable=True)  # #FFFFFF
+    text_color = Column(String, nullable=True)  # #000000
+    border_color = Column(String, nullable=True)  # #000000 (se aplicável)
+    vehicle_category = Column(String, nullable=True)  # PRIVATE, COMMERCIAL, OFFICIAL
+    requires_special_license = Column(Boolean, default=False)  # Táxi requer licença
+    valid_from = Column(Date, nullable=True)  # Data de início da vigência deste tipo de placa
+    valid_until = Column(Date, nullable=True)  # Data de fim da vigência (NULL = vigente)
+    active = Column(Boolean, default=True)
+
+    # Relationships
+    plate_model = relationship("PlateModel", back_populates="plate_types")
     plates = relationship("Plate", back_populates="plate_type")
 
 
@@ -129,33 +156,22 @@ class Plate(Base, BaseModelWithUpdate):
 
     vehicle_id = Column(PGUUID(as_uuid=True), ForeignKey("vehicles.id"), nullable=False)
     plate_type_id = Column(PGUUID(as_uuid=True), ForeignKey("plate_types.id"), nullable=False)
+    plate_model_id = Column(PGUUID(as_uuid=True), ForeignKey("plate_models.id"), nullable=True)
     plate_number = Column(String, nullable=False)
-    licensing_date = Column(Date, nullable=True)
+    licensing_start_date = Column(Date, nullable=True)  # Data de início do licenciamento
+    licensing_end_date = Column(Date, nullable=True)  # Data de fim do licenciamento
     licensing_country = Column(String, nullable=True)
-    state = Column(String, nullable=True)
+    state = Column(String, nullable=True)  # UF/Estado
     city = Column(String, nullable=True)
-    status = Column(String, nullable=True)
-    end_date = Column(Date, nullable=True)
+    status = Column(String, nullable=True)  # ACTIVE, REPLACED, STOLEN, LOST
+    end_date = Column(Date, nullable=True)  # Quando parou de usar (null se ativa)
     created_by_entity_id = Column(PGUUID(as_uuid=True), nullable=True)
     active = Column(Boolean, default=True)
 
     # Relationships
     vehicle = relationship("Vehicle", back_populates="plates")
     plate_type = relationship("PlateType", back_populates="plates")
+    plate_model = relationship("PlateModel", back_populates="plates")
 
 
-class Color(Base, BaseModelWithUpdate):
-    """Cores de veículos (histórico)"""
-    __tablename__ = "colors"
-
-    vehicle_id = Column(PGUUID(as_uuid=True), ForeignKey("vehicles.id"), nullable=False)
-    color = Column(String, nullable=False)
-    hex_code = Column(String, nullable=True)
-    start_date = Column(Date, nullable=True)
-    end_date = Column(Date, nullable=True)
-    created_by_entity_id = Column(PGUUID(as_uuid=True), nullable=True)
-    active = Column(Boolean, default=True)
-    description = Column(Text, nullable=True)
-
-    # Relationships
-    vehicle = relationship("Vehicle", back_populates="colors")
+# Removido - agora usamos Color e VehicleColor em app/models/color.py
