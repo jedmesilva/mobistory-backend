@@ -40,6 +40,11 @@ class Entity(Base, BaseModelWithUpdate):
     extra_metadata = Column("metadata", JSONB, nullable=True)  # 'metadata' é reservado, usa alias
     active = Column(Boolean, default=True)
 
+    # Campos para entidades anônimas e verificação
+    is_anonymous = Column(Boolean, default=False, nullable=False)
+    device_fingerprint = Column(JSONB, nullable=True)
+    verified = Column(Boolean, default=False, nullable=False)  # Entidade completamente validada
+
     # Relationships
     entity_type = relationship("EntityType", back_populates="entities")
     vehicle_links = relationship("Link", back_populates="entity", foreign_keys="Link.entity_id")

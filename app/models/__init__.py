@@ -8,9 +8,16 @@ from .entity import (
     RelationshipType,
     LinkStatus,
 )
-from .vehicle import Vehicle, Brand, Model, ModelVersion, Plate, PlateType, Color
+from .vehicle import Vehicle, Brand, Model, ModelVersion, Plate, PlateType, PlateModel
+from .color import Color, VehicleColor
 from .message import Message, MessageType, SenderType
 from .file import File
+from .conversation import (
+    ConversationContext,
+    Conversation,
+    ConversationParticipant,
+    ConversationMessage,
+)
 
 __all__ = [
     "Entity",
@@ -27,9 +34,15 @@ __all__ = [
     "ModelVersion",
     "Plate",
     "PlateType",
+    "PlateModel",
     "Color",
+    "VehicleColor",
     "Message",
     "MessageType",
     "SenderType",
     "File",
+    "ConversationContext",
+    "Conversation",
+    "ConversationParticipant",
+    "ConversationMessage",
 ]

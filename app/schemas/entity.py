@@ -29,13 +29,10 @@ class LinkStatus(str, Enum):
 
 # Entity Schemas
 class EntityBase(BaseModel):
-    entity_type: EntityType
-    name: str
+    name: str = Field(validation_alias="display_name", serialization_alias="name")
     email: Optional[str] = None
     phone: Optional[str] = None
-    document_number: Optional[str] = None
-    ai_model: Optional[str] = None
-    ai_capabilities: Optional[str] = None
+    document_number: Optional[str] = Field(default=None, validation_alias="legal_id_number")
     active: bool = True
 
 
@@ -53,13 +50,29 @@ class EntityUpdate(BaseModel):
     active: Optional[bool] = None
 
 
-class Entity(EntityBase):
+class Entity(BaseModel):
     id: uuid.UUID
+    entity_code: str
+    name: str = Field(alias="display_name")
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    document_number: Optional[str] = Field(default=None, alias="legal_id_number")
+    active: bool = True
     created_at: datetime
     updated_at: datetime
+    is_anonymous: bool = False
+    verified: bool = False  # Entidade completamente validada (docs + dados conferidos)
 
     class Config:
         from_attributes = True
+        populate_by_name = True
+
+
+# Anonymous Entity Schemas
+class AnonymousEntityCreate(BaseModel):
+    """Schema para criar entidade anônima com device fingerprint"""
+    device_fingerprint: dict  # Device ID, network info, geolocation, etc.
+    name: Optional[str] = "Usuário Anônimo"
 
 
 # Vehicle Entity Link Schemas

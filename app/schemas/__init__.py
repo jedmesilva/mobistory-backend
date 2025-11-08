@@ -15,10 +15,35 @@ from .vehicle import (
     ModelVersionUpdate,
     Color,
     ColorCreate,
+    ColorUpdate,
+    VehicleColor,
+    VehicleColorCreate,
     Plate,
     PlateCreate,
 )
-from .conversation import Conversation, ConversationCreate, ConversationUpdate, ConversationWithDetails
+from .conversation import (
+    # Context Schemas
+    ConversationContext,
+    ConversationContextCreate,
+    ConversationContextUpdate,
+    # Conversation Schemas
+    Conversation,
+    ConversationCreate,
+    ConversationUpdate,
+    ConversationWithDetails,
+    ConversationListResponse,
+    ConversationDetailResponse,
+    # Participant Schemas
+    ConversationParticipant,
+    ConversationParticipantCreate,
+    ConversationParticipantUpdate,
+    ConversationParticipantWithEntity,
+    # Message Schemas
+    ConversationMessage,
+    ConversationMessageCreate,
+    ConversationMessageUpdate,
+    ConversationMessageWithDetails,
+)
 from .message import Message, MessageCreate, MessageUpdate
 from .fueling import Fueling, FuelingCreate, FuelingUpdate
 from .maintenance import Maintenance, MaintenanceCreate, MaintenanceUpdate
@@ -41,12 +66,32 @@ __all__ = [
     "ModelVersionUpdate",
     "Color",
     "ColorCreate",
+    "ColorUpdate",
+    "VehicleColor",
+    "VehicleColorCreate",
     "Plate",
     "PlateCreate",
+    # Conversation Context
+    "ConversationContext",
+    "ConversationContextCreate",
+    "ConversationContextUpdate",
+    # Conversation
     "Conversation",
     "ConversationCreate",
     "ConversationUpdate",
     "ConversationWithDetails",
+    "ConversationListResponse",
+    "ConversationDetailResponse",
+    # Conversation Participant
+    "ConversationParticipant",
+    "ConversationParticipantCreate",
+    "ConversationParticipantUpdate",
+    "ConversationParticipantWithEntity",
+    # Conversation Message
+    "ConversationMessage",
+    "ConversationMessageCreate",
+    "ConversationMessageUpdate",
+    "ConversationMessageWithDetails",
     "Message",
     "MessageCreate",
     "MessageUpdate",

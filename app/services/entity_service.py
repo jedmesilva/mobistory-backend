@@ -6,10 +6,11 @@ import uuid
 
 from app.models.entity import Entity, VehicleEntityLink, LinkStatus, RelationshipType
 from app.schemas.entity import (
-    EntityCreate, 
-    EntityUpdate, 
-    VehicleEntityLinkCreate, 
-    VehicleEntityLinkUpdate
+    EntityCreate,
+    EntityUpdate,
+    VehicleEntityLinkCreate,
+    VehicleEntityLinkUpdate,
+    AnonymousEntityCreate
 )
 
 
@@ -21,10 +22,72 @@ class EntityService:
 
     def create_entity(self, entity_data: EntityCreate) -> Entity:
         """Create a new entity"""
-        db_entity = Entity(**entity_data.dict())
+        # Criar entity_code único
+        entity_code = f"ENT-{uuid.uuid4().hex[:12].upper()}"
+
+        # Criar entidade com os campos corretos
+        db_entity = Entity(
+            entity_code=entity_code,
+            display_name=entity_data.name,  # 'name' do schema -> 'display_name' do model
+            email=entity_data.email,
+            phone=entity_data.phone,
+            legal_id_number=entity_data.document_number,  # 'document_number' do schema -> 'legal_id_number' do model
+            active=entity_data.active,
+        )
+
         self.db.add(db_entity)
         self.db.commit()
         self.db.refresh(db_entity)
+        return db_entity
+
+    def create_anonymous_entity(self, entity_data: AnonymousEntityCreate) -> Entity:
+        """Create a new anonymous entity with device fingerprint"""
+        # Criar entity_code único para entidades anônimas
+        entity_code = f"ANON-{uuid.uuid4().hex[:12].upper()}"
+
+        # Criar entidade anônima
+        db_entity = Entity(
+            entity_code=entity_code,
+            display_name=entity_data.name or "Usuário Anônimo",
+            is_anonymous=True,
+            device_fingerprint=entity_data.device_fingerprint,
+            active=True,
+            verified=False,
+        )
+
+        self.db.add(db_entity)
+        self.db.commit()
+        self.db.refresh(db_entity)
+        return db_entity
+
+    def convert_anonymous_to_verified(
+        self,
+        entity_id: uuid.UUID,
+        email: Optional[str] = None,
+        phone: Optional[str] = None,
+        document_number: Optional[str] = None,
+        display_name: Optional[str] = None
+    ) -> Optional[Entity]:
+        """Convert anonymous entity to verified entity"""
+        db_entity = self.get_entity(entity_id)
+        if db_entity and db_entity.is_anonymous:
+            # Atualizar dados
+            if display_name:
+                db_entity.display_name = display_name
+            if email:
+                db_entity.email = email
+            if phone:
+                db_entity.phone = phone
+            if document_number:
+                db_entity.legal_id_number = document_number
+
+            # Marcar como não anônimo se tiver pelo menos um dado verificado
+            if email or phone or document_number:
+                db_entity.is_anonymous = False
+
+            db_entity.updated_at = datetime.utcnow()
+            self.db.commit()
+            self.db.refresh(db_entity)
         return db_entity
 
     def get_entity(self, entity_id: uuid.UUID) -> Optional[Entity]:

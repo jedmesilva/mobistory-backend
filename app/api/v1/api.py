@@ -5,6 +5,8 @@ from app.api.v1.endpoints import (
     conversations,
     messages,
     brands,
+    colors,
+    plate_models,
     plate_types,
     fueling,
     maintenance,
@@ -38,7 +40,21 @@ api_router.include_router(
     tags=["brands"],
 )
 
-# Plate Types (Tipos de placas)
+# Colors (Catálogo de cores)
+api_router.include_router(
+    colors.router,
+    prefix="/colors",
+    tags=["colors"],
+)
+
+# Plate Models (Modelos de placas - Mercosul, Antigo, etc)
+api_router.include_router(
+    plate_models.router,
+    prefix="/plate-models",
+    tags=["plate-models"],
+)
+
+# Plate Types (Tipos de placas - Particular, Comercial, etc)
 api_router.include_router(
     plate_types.router,
     prefix="/plate-types",
@@ -102,5 +118,6 @@ api_router.include_router(
 # Entidades e vínculos
 api_router.include_router(
     entities.router,
+    prefix="/entities",
     tags=["entities"],
 )

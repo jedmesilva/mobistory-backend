@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Header
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from datetime import datetime, date
 from app.core.database import get_db
@@ -28,7 +28,20 @@ def list_vehicles(
     - **limit**: Limite de registros retornados
     - **X-Entity-ID**: ID da entidade (opcional, via header)
     """
-    vehicles = db.query(Vehicle).offset(skip).limit(limit).all()
+    # Carregar relacionamentos com eager loading
+    vehicles = (
+        db.query(Vehicle)
+        .options(
+            joinedload(Vehicle.brand),
+            joinedload(Vehicle.model),
+            joinedload(Vehicle.version),
+            joinedload(Vehicle.plates),
+            joinedload(Vehicle.vehicle_colors).joinedload(VehicleColor.color),
+        )
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
     return vehicles
 
 

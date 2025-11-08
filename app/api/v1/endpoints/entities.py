@@ -9,6 +9,7 @@ from app.schemas.entity import (
     Entity,
     EntityCreate,
     EntityUpdate,
+    AnonymousEntityCreate,
     VehicleEntityLink,
     VehicleEntityLinkCreate,
     VehicleEntityLinkUpdate,
@@ -40,6 +41,82 @@ def create_entity(
     """Create a new entity"""
     service = EntityService(db)
     return service.create_entity(entity)
+
+
+@router.get("/{entity_id}", response_model=Entity)
+def get_entity(
+    entity_id: uuid.UUID,
+    db: Session = Depends(get_db)
+):
+    """Get entity by ID"""
+    print(f"🔵 [BACKEND] Buscando entidade por ID: {entity_id}")
+    service = EntityService(db)
+    entity = service.get_entity(entity_id)
+    if not entity:
+        print(f"❌ [BACKEND] Entidade não encontrada: {entity_id}")
+        raise HTTPException(status_code=404, detail="Entity not found")
+    print(f"✅ [BACKEND] Entidade encontrada: {entity.entity_code}")
+    return entity
+
+
+@router.post("/anonymous", response_model=Entity)
+def create_anonymous_entity(
+    entity_data: AnonymousEntityCreate,
+    db: Session = Depends(get_db)
+):
+    """
+    Create a new anonymous entity with device fingerprint
+
+    Anonymous entities can use the app without providing personal information.
+    They can later be converted to verified entities.
+
+    Device fingerprint should include:
+    - deviceId: Unique device identifier
+    - deviceType: Device type (phone, tablet, etc.)
+    - osName: Operating system name
+    - osVersion: Operating system version
+    - appVersion: Application version
+    - networkType: Network connection type
+    - timezone: Device timezone
+    - locale: Device locale
+    - geolocation: Optional geolocation data
+    """
+    print(f"🔵 [BACKEND] Criando entidade anônima: {entity_data.name}")
+    print(f"🔵 [BACKEND] Device fingerprint: {entity_data.device_fingerprint.get('deviceId', 'N/A')}")
+
+    service = EntityService(db)
+    entity = service.create_anonymous_entity(entity_data)
+
+    print(f"✅ [BACKEND] Entidade anônima criada! ID: {entity.id}, Code: {entity.entity_code}")
+    return entity
+
+
+@router.post("/entities/{entity_id}/convert", response_model=Entity)
+def convert_anonymous_entity(
+    entity_id: uuid.UUID,
+    email: Optional[str] = None,
+    phone: Optional[str] = None,
+    document_number: Optional[str] = None,
+    display_name: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    Convert anonymous entity to verified entity
+
+    Allows adding personal information to an anonymous entity
+    and marking it as non-anonymous.
+    """
+    service = EntityService(db)
+    entity = service.convert_anonymous_to_verified(
+        entity_id=entity_id,
+        email=email,
+        phone=phone,
+        document_number=document_number,
+        display_name=display_name
+    )
+    if not entity:
+        raise HTTPException(status_code=404, detail="Entity not found or not anonymous")
+    return entity
 
 
 @router.get("/entities", response_model=List[Entity])

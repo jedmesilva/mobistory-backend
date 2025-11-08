@@ -10,16 +10,16 @@ router = APIRouter()
 
 @router.get("/", response_model=List[PlateTypeSchema])
 def list_plate_types(
-    country: str = None,
-    category: str = None,
+    plate_model_id: str = None,
+    vehicle_category: str = None,
     active_only: bool = True,
     db: Session = Depends(get_db),
 ):
     """
     Listar tipos de placas
 
-    - **country**: Filtrar por país (ex: BR, US, AR)
-    - **category**: Filtrar por categoria (particular, comercial, oficial, etc)
+    - **plate_model_id**: Filtrar por modelo de placa (UUID)
+    - **vehicle_category**: Filtrar por categoria (PRIVATE, COMMERCIAL, OFFICIAL, etc)
     - **active_only**: Se True, retorna apenas tipos ativos (default: True)
     """
     query = db.query(PlateType)
@@ -27,14 +27,14 @@ def list_plate_types(
     if active_only:
         query = query.filter(PlateType.active == True)
 
-    if country:
-        query = query.filter(PlateType.country == country.upper())
+    if plate_model_id:
+        query = query.filter(PlateType.plate_model_id == plate_model_id)
 
-    if category:
-        query = query.filter(PlateType.category == category)
+    if vehicle_category:
+        query = query.filter(PlateType.vehicle_category == vehicle_category.upper())
 
-    # Ordenar por país e depois por nome
-    query = query.order_by(PlateType.country, PlateType.name)
+    # Ordenar por nome
+    query = query.order_by(PlateType.name)
 
     return query.all()
 
