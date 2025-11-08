@@ -177,10 +177,13 @@ def list_conversations(
     if vehicle_id:
         query = query.filter(Conversation.primary_vehicle_id == vehicle_id)
 
-    # Filtro por participante
+    # Filtro por participante (apenas participantes ativos)
     if entity_id:
         query = query.join(ConversationParticipant).filter(
-            ConversationParticipant.entity_id == entity_id
+            and_(
+                ConversationParticipant.entity_id == entity_id,
+                ConversationParticipant.is_active == True
+            )
         )
 
     # Filtro por status
