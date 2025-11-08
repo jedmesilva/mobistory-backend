@@ -220,8 +220,7 @@ class VehicleEntityLinkService:
         return self.db.query(VehicleEntityLink).filter(
             and_(
                 VehicleEntityLink.vehicle_id == vehicle_id,
-                VehicleEntityLink.active == True,
-                VehicleEntityLink.status == LinkStatus.ACTIVE
+                VehicleEntityLink.status != 'terminated'
             )
         ).count()
 
