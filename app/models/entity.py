@@ -33,10 +33,13 @@ class Entity(Base, BaseModelWithUpdate):
     entity_type_id = Column(PGUUID(as_uuid=True), ForeignKey("entity_types.id"), nullable=True)
     legal_id_number = Column(String, unique=True, nullable=True)  # CPF, CNPJ, etc
     global_key_hash = Column(String, nullable=True)
-    display_name = Column(String, nullable=False)
-    email = Column(String, nullable=True)
-    phone = Column(String, nullable=True)
-    profile_picture_url = Column(Text, nullable=True)
+
+    # Referências aos dados primários
+    primary_name_id = Column(PGUUID(as_uuid=True), ForeignKey("entity_names.id"), nullable=True)
+    primary_email_contact_id = Column(PGUUID(as_uuid=True), ForeignKey("entity_contacts.id"), nullable=True)
+    primary_phone_contact_id = Column(PGUUID(as_uuid=True), ForeignKey("entity_contacts.id"), nullable=True)
+    profile_picture_id = Column(PGUUID(as_uuid=True), ForeignKey("files.id"), nullable=True)
+
     extra_metadata = Column("metadata", JSONB, nullable=True)  # 'metadata' é reservado, usa alias
     active = Column(Boolean, default=True)
 
@@ -49,6 +52,16 @@ class Entity(Base, BaseModelWithUpdate):
     entity_type = relationship("EntityType", back_populates="entities")
     vehicle_links = relationship("Link", back_populates="entity", foreign_keys="Link.entity_id")
 
+    # Relacionamentos com os dados primários
+    primary_name = relationship("EntityName", foreign_keys=[primary_name_id], post_update=True)
+    primary_email_contact = relationship("EntityContact", foreign_keys=[primary_email_contact_id], post_update=True)
+    primary_phone_contact = relationship("EntityContact", foreign_keys=[primary_phone_contact_id], post_update=True)
+    profile_picture = relationship("File", foreign_keys=[profile_picture_id])
+
+    # Relacionamentos com todas as entradas
+    names = relationship("EntityName", back_populates="entity", foreign_keys="EntityName.entity_id")
+    contacts = relationship("EntityContact", back_populates="entity", foreign_keys="EntityContact.entity_id")
+
     # Relacionamentos pai-filho
     children_relationships = relationship(
         "EntityRelationship",
@@ -60,6 +73,55 @@ class Entity(Base, BaseModelWithUpdate):
         foreign_keys="EntityRelationship.entity_id",
         back_populates="entity"
     )
+
+    # Properties para compatibilidade com código legado
+    @property
+    def display_name(self):
+        """Retorna o nome atual da entidade"""
+        try:
+            if self.primary_name_id and hasattr(self, 'primary_name'):
+                primary_name = self.primary_name
+                if primary_name:
+                    return primary_name.name_value
+        except Exception:
+            pass
+        return None
+
+    @property
+    def email(self):
+        """Retorna o email primário da entidade"""
+        try:
+            if self.primary_email_contact_id and hasattr(self, 'primary_email_contact'):
+                primary_email = self.primary_email_contact
+                if primary_email:
+                    return primary_email.contact_value
+        except Exception:
+            pass
+        return None
+
+    @property
+    def phone(self):
+        """Retorna o telefone primário da entidade"""
+        try:
+            if self.primary_phone_contact_id and hasattr(self, 'primary_phone_contact'):
+                primary_phone = self.primary_phone_contact
+                if primary_phone:
+                    return primary_phone.contact_value
+        except Exception:
+            pass
+        return None
+
+    @property
+    def profile_picture_url(self):
+        """Retorna a URL da foto de perfil"""
+        try:
+            if self.profile_picture_id and hasattr(self, 'profile_picture'):
+                profile_pic = self.profile_picture
+                if profile_pic:
+                    return profile_pic.file_url
+        except Exception:
+            pass
+        return None
 
 
 class EntityRelationship(Base, BaseModelWithUpdate):

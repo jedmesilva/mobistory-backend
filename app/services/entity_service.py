@@ -1,10 +1,12 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import and_, or_
-from datetime import datetime
+from datetime import datetime, date
 import uuid
 
 from app.models.entity import Entity, VehicleEntityLink, LinkStatus, RelationshipType
+from app.models.entity_name import EntityName
+from app.models.entity_contact import EntityContact
 from app.schemas.entity import (
     EntityCreate,
     EntityUpdate,
@@ -16,26 +18,100 @@ from app.schemas.entity import (
 
 class EntityService:
     """Service for managing entities"""
-    
+
     def __init__(self, db: Session):
         self.db = db
+
+    def _create_entity_name(self, entity_id: uuid.UUID, name: str, name_type: str = "display_name") -> EntityName:
+        """Helper: Create entity name record"""
+        entity_name = EntityName(
+            entity_id=entity_id,
+            name_type=name_type,
+            name_value=name,
+            is_current=True,
+            start_date=date.today()
+        )
+        self.db.add(entity_name)
+        self.db.flush()
+        return entity_name
+
+    def _create_entity_contact(self, entity_id: uuid.UUID, contact_type: str, contact_value: str,
+                               is_primary: bool = True, use_for_login: bool = True) -> EntityContact:
+        """Helper: Create entity contact record"""
+        entity_contact = EntityContact(
+            entity_id=entity_id,
+            contact_type=contact_type,
+            contact_value=contact_value,
+            is_primary=is_primary,
+            use_for_login=use_for_login,
+            is_active=True,
+            start_date=date.today()
+        )
+        self.db.add(entity_contact)
+        self.db.flush()
+        return entity_contact
+
+    def _update_entity_name(self, entity: Entity, new_name: str) -> None:
+        """Helper: Update entity name (creates new record and updates reference)"""
+        # Marca nome atual como não atual
+        if entity.primary_name_id:
+            old_name = self.db.query(EntityName).filter(EntityName.id == entity.primary_name_id).first()
+            if old_name:
+                old_name.is_current = False
+                old_name.end_date = date.today()
+
+        # Cria novo nome
+        new_name_record = self._create_entity_name(entity.id, new_name)
+        entity.primary_name_id = new_name_record.id
+
+    def _update_entity_contact(self, entity: Entity, contact_type: str, new_value: str) -> None:
+        """Helper: Update entity contact (creates new record and updates reference)"""
+        # Determina qual campo atualizar
+        contact_id_field = f"primary_{contact_type}_contact_id"
+
+        # Marca contato atual como não ativo
+        current_contact_id = getattr(entity, contact_id_field, None)
+        if current_contact_id:
+            old_contact = self.db.query(EntityContact).filter(EntityContact.id == current_contact_id).first()
+            if old_contact:
+                old_contact.is_active = False
+                old_contact.is_primary = False
+                old_contact.end_date = date.today()
+
+        # Cria novo contato
+        new_contact = self._create_entity_contact(entity.id, contact_type, new_value)
+        setattr(entity, contact_id_field, new_contact.id)
 
     def create_entity(self, entity_data: EntityCreate) -> Entity:
         """Create a new entity"""
         # Criar entity_code único
         entity_code = f"ENT-{uuid.uuid4().hex[:12].upper()}"
 
-        # Criar entidade com os campos corretos
+        # Criar entidade
         db_entity = Entity(
             entity_code=entity_code,
-            display_name=entity_data.name,  # 'name' do schema -> 'display_name' do model
-            email=entity_data.email,
-            phone=entity_data.phone,
-            legal_id_number=entity_data.document_number,  # 'document_number' do schema -> 'legal_id_number' do model
+            legal_id_number=entity_data.document_number,
             active=entity_data.active,
         )
 
         self.db.add(db_entity)
+        self.db.flush()  # Flush para obter o ID
+
+        # Criar nome
+        if entity_data.name:
+            name_record = self._create_entity_name(db_entity.id, entity_data.name)
+            db_entity.primary_name_id = name_record.id
+
+        # Criar email
+        if entity_data.email:
+            email_contact = self._create_entity_contact(db_entity.id, 'email', entity_data.email)
+            db_entity.primary_email_contact_id = email_contact.id
+
+        # Criar telefone
+        if entity_data.phone:
+            phone_contact = self._create_entity_contact(db_entity.id, 'phone', entity_data.phone)
+            db_entity.primary_phone_contact_id = phone_contact.id
+
         self.db.commit()
         self.db.refresh(db_entity)
         return db_entity
@@ -48,7 +124,6 @@ class EntityService:
         # Criar entidade anônima
         db_entity = Entity(
             entity_code=entity_code,
-            display_name=entity_data.name or "Usuário Anônimo",
             is_anonymous=True,
             device_fingerprint=entity_data.device_fingerprint,
             active=True,
@@ -56,6 +131,13 @@ class EntityService:
         )
 
         self.db.add(db_entity)
+        self.db.flush()
+
+        # Criar nome
+        name = entity_data.name or "Usuário Anônimo"
+        name_record = self._create_entity_name(db_entity.id, name)
+        db_entity.primary_name_id = name_record.id
+
         self.db.commit()
         self.db.refresh(db_entity)
         return db_entity
@@ -71,13 +153,19 @@ class EntityService:
         """Convert anonymous entity to verified entity"""
         db_entity = self.get_entity(entity_id)
         if db_entity and db_entity.is_anonymous:
-            # Atualizar dados
+            # Atualizar nome
             if display_name:
-                db_entity.display_name = display_name
+                self._update_entity_name(db_entity, display_name)
+
+            # Atualizar/criar email
             if email:
-                db_entity.email = email
+                self._update_entity_contact(db_entity, 'email', email)
+
+            # Atualizar/criar telefone
             if phone:
-                db_entity.phone = phone
+                self._update_entity_contact(db_entity, 'phone', phone)
+
+            # Atualizar documento
             if document_number:
                 db_entity.legal_id_number = document_number
 
@@ -91,12 +179,22 @@ class EntityService:
         return db_entity
 
     def get_entity(self, entity_id: uuid.UUID) -> Optional[Entity]:
-        """Get entity by ID"""
-        return self.db.query(Entity).filter(Entity.id == entity_id).first()
+        """Get entity by ID with related data"""
+        return self.db.query(Entity).options(
+            joinedload(Entity.primary_name),
+            joinedload(Entity.primary_email_contact),
+            joinedload(Entity.primary_phone_contact),
+            joinedload(Entity.profile_picture)
+        ).filter(Entity.id == entity_id).first()
 
     def get_entities(self, skip: int = 0, limit: int = 100) -> List[Entity]:
         """Get all entities with pagination"""
-        return self.db.query(Entity).filter(Entity.active == True).offset(skip).limit(limit).all()
+        return self.db.query(Entity).options(
+            joinedload(Entity.primary_name),
+            joinedload(Entity.primary_email_contact),
+            joinedload(Entity.primary_phone_contact),
+            joinedload(Entity.profile_picture)
+        ).filter(Entity.active == True).offset(skip).limit(limit).all()
 
     def update_entity(self, entity_id: uuid.UUID, entity_data: EntityUpdate) -> Optional[Entity]:
         """Update entity"""

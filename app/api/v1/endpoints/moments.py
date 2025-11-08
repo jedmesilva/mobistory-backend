@@ -79,8 +79,8 @@ def get_moments_with_details(db: Session = Depends(get_db)):
             json_build_object(
                 'id', e.id,
                 'entity_type', e.entity_type,
-                'name', e.name,
-                'email', e.email
+                'name', en.name_value,
+                'email', ec_email.contact_value
             ) as entities,
             COALESCE(
                 (SELECT json_agg(json_build_object(
@@ -100,11 +100,12 @@ def get_moments_with_details(db: Session = Depends(get_db)):
                     'reaction_type', mr.reaction_type,
                     'entities', json_build_object(
                         'id', er.id,
-                        'name', er.name
+                        'name', ern.name_value
                     )
                 ))
                 FROM moment_reactions mr
                 LEFT JOIN entities er ON mr.entity_id = er.id
+                LEFT JOIN entity_names ern ON er.primary_name_id = ern.id
                 WHERE mr.moment_id = mo.id),
                 '[]'::json
             ) as moment_reactions,
@@ -115,12 +116,13 @@ def get_moments_with_details(db: Session = Depends(get_db)):
                     'parent_comment_id', mc.parent_comment_id,
                     'created_at', mc.created_at,
                     'entities', json_build_object(
-                        'id', ec.id,
-                        'name', ec.name
+                        'id', ecc.id,
+                        'name', eccn.name_value
                     )
                 ) ORDER BY mc.created_at)
                 FROM moment_comments mc
-                LEFT JOIN entities ec ON mc.entity_id = ec.id
+                LEFT JOIN entities ecc ON mc.entity_id = ecc.id
+                LEFT JOIN entity_names eccn ON ecc.primary_name_id = eccn.id
                 WHERE mc.moment_id = mo.id),
                 '[]'::json
             ) as moment_comments
@@ -130,6 +132,8 @@ def get_moments_with_details(db: Session = Depends(get_db)):
         LEFT JOIN models md ON v.model_id = md.id
         LEFT JOIN model_versions mv ON v.version_id = mv.id
         LEFT JOIN entities e ON mo.entity_id = e.id
+        LEFT JOIN entity_names en ON e.primary_name_id = en.id
+        LEFT JOIN entity_contacts ec_email ON e.primary_email_contact_id = ec_email.id
         WHERE mo.active = true
         ORDER BY mo.created_at DESC
     """)

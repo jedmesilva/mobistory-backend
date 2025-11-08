@@ -53,7 +53,9 @@ class EntityUpdate(BaseModel):
 class Entity(BaseModel):
     id: uuid.UUID
     entity_code: str
-    name: str = Field(alias="display_name")
+    # Campo 'name' vem da property 'display_name' do modelo
+    name: Optional[str] = Field(default=None, validation_alias="display_name", serialization_alias="name")
+    # Campos 'email' e 'phone' vêm das properties do modelo
     email: Optional[str] = None
     phone: Optional[str] = None
     document_number: Optional[str] = Field(default=None, alias="legal_id_number")
@@ -66,6 +68,8 @@ class Entity(BaseModel):
     class Config:
         from_attributes = True
         populate_by_name = True
+        # Permite que o Pydantic acesse properties do SQLAlchemy
+        arbitrary_types_allowed = True
 
 
 # Anonymous Entity Schemas
