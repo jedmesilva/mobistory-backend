@@ -153,7 +153,7 @@ class VehicleEntityLinkService:
         ).filter(VehicleEntityLink.vehicle_id == vehicle_id)
         
         if active_only:
-            query = query.filter(VehicleEntityLink.active == True)
+            query = query.filter(VehicleEntityLink.status != 'terminated')
         
         if status:
             query = query.filter(VehicleEntityLink.status == status)
@@ -175,7 +175,7 @@ class VehicleEntityLinkService:
         ).filter(VehicleEntityLink.entity_id == entity_id)
         
         if active_only:
-            query = query.filter(VehicleEntityLink.active == True)
+            query = query.filter(VehicleEntityLink.status != 'terminated')
         
         if status:
             query = query.filter(VehicleEntityLink.status == status)

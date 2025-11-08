@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Header
+from fastapi import APIRouter, Depends, HTTPException, status, Header, Query
 from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from datetime import datetime, date
+import uuid
 from app.core.database import get_db
 from app.models import Vehicle, Brand, Model, Plate, PlateType, Color, VehicleColor, Link, LinkType
 from app.schemas import (
@@ -9,6 +10,13 @@ from app.schemas import (
     VehicleCreate,
     VehicleUpdate,
     VehicleWithDetails,
+)
+from app.services.entity_service import VehicleEntityLinkService
+from app.schemas.entity import (
+    VehicleLinksResponse,
+    VehicleEntityLinkWithEntity,
+    LinkStatus,
+    RelationshipType,
 )
 
 router = APIRouter()
@@ -363,3 +371,30 @@ def delete_vehicle(
     db.commit()
 
     return None
+
+
+@router.get("/{vehicle_id}/links", response_model=VehicleLinksResponse)
+def get_vehicle_links(
+    vehicle_id: uuid.UUID,
+    status: Optional[LinkStatus] = Query(None),
+    relationship_type: Optional[RelationshipType] = Query(None),
+    active_only: bool = Query(True),
+    db: Session = Depends(get_db)
+):
+    """Get all links for a vehicle"""
+    service = VehicleEntityLinkService(db)
+    links = service.get_vehicle_links(
+        vehicle_id=vehicle_id,
+        status=status,
+        relationship_type=relationship_type,
+        active_only=active_only
+    )
+
+    active_count = service.get_active_vehicle_links_count(vehicle_id)
+
+    return VehicleLinksResponse(
+        vehicle_id=vehicle_id,
+        links=[VehicleEntityLinkWithEntity.from_orm(link) for link in links],
+        active_count=active_count,
+        total_count=len(links)
+    )
