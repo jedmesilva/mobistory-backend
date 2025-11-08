@@ -141,26 +141,27 @@ class VehicleEntityLinkService:
         ).filter(VehicleEntityLink.id == link_id).first()
 
     def get_vehicle_links(
-        self, 
-        vehicle_id: uuid.UUID, 
+        self,
+        vehicle_id: uuid.UUID,
         status: Optional[LinkStatus] = None,
-        relationship_type: Optional[RelationshipType] = None,
+        link_type_id: Optional[uuid.UUID] = None,
         active_only: bool = True
     ) -> List[VehicleEntityLink]:
         """Get all links for a vehicle with filters"""
         query = self.db.query(VehicleEntityLink).options(
-            joinedload(VehicleEntityLink.entity)
+            joinedload(VehicleEntityLink.entity),
+            joinedload(VehicleEntityLink.link_type)
         ).filter(VehicleEntityLink.vehicle_id == vehicle_id)
-        
+
         if active_only:
             query = query.filter(VehicleEntityLink.status != 'terminated')
-        
+
         if status:
             query = query.filter(VehicleEntityLink.status == status)
-            
-        if relationship_type:
-            query = query.filter(VehicleEntityLink.relationship_type == relationship_type)
-        
+
+        if link_type_id:
+            query = query.filter(VehicleEntityLink.link_type_id == link_type_id)
+
         return query.all()
 
     def get_entity_links(

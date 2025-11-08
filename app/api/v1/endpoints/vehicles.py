@@ -16,7 +16,6 @@ from app.schemas.entity import (
     VehicleLinksResponse,
     VehicleEntityLinkWithEntity,
     LinkStatus,
-    RelationshipType,
 )
 
 router = APIRouter()
@@ -377,7 +376,7 @@ def delete_vehicle(
 def get_vehicle_links(
     vehicle_id: uuid.UUID,
     status: Optional[LinkStatus] = Query(None),
-    relationship_type: Optional[RelationshipType] = Query(None),
+    link_type_id: Optional[uuid.UUID] = Query(None),
     active_only: bool = Query(True),
     db: Session = Depends(get_db)
 ):
@@ -386,7 +385,7 @@ def get_vehicle_links(
     links = service.get_vehicle_links(
         vehicle_id=vehicle_id,
         status=status,
-        relationship_type=relationship_type,
+        link_type_id=link_type_id,
         active_only=active_only
     )
 
