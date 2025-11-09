@@ -4,7 +4,7 @@ from typing import List, Optional
 from datetime import datetime, date
 import uuid
 from app.core.database import get_db
-from app.models import Vehicle, Brand, Model, Plate, PlateType, Color, VehicleColor, Link, LinkType
+from app.models import Vehicle, Brand, Model, Plate, PlateType, Color, VehicleColor, Link, LinkType, VehicleCover
 from app.schemas import (
     Vehicle as VehicleSchema,
     VehicleCreate,
@@ -44,6 +44,7 @@ def list_vehicles(
             joinedload(Vehicle.version),
             joinedload(Vehicle.plates),
             joinedload(Vehicle.vehicle_colors).joinedload(VehicleColor.color),
+            joinedload(Vehicle.covers),
         )
         .offset(skip)
         .limit(limit)
@@ -59,9 +60,9 @@ def create_vehicle(
     db: Session = Depends(get_db),
 ):
     """
-    Criar novo veículo com suporte para catalog ou custom fields
+    Criar novo veículo
 
-    Pode usar brand_id/model_id/version_id (catálogo) OU custom_brand/custom_model/custom_version
+    Requer brand_id e model_id do catálogo. version_id é opcional.
 
     Opcionalmente cria:
     - Registro de placa (se plate_number fornecido)
@@ -85,43 +86,43 @@ def create_vehicle(
         vehicle_data = {k: v for k, v in vehicle_data.items() if v is not None}
         print(f">>> [Backend] Dados do veículo após limpeza de None: {vehicle_data}")
 
-        # Validar lógica de brand: ou usa catalog OU custom
+        # Validar brand_id (obrigatório)
         print(f">>> [Backend] Validando brand_id: {vehicle_data.get('brand_id')}")
-        if vehicle_data.get('brand_id'):
-            # Validar se brand existe
-            brand = db.query(Brand).filter(Brand.id == vehicle_data['brand_id']).first()
-            if not brand:
-                print(f"❌ [Backend] Brand não encontrada: {vehicle_data['brand_id']}")
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"Brand with id {vehicle_data['brand_id']} not found"
-                )
-            print(f"✓ [Backend] Brand encontrada: {brand.name}")
-        elif not vehicle_data.get('custom_brand'):
-            print("❌ [Backend] Nem brand_id nem custom_brand fornecidos")
+        if not vehicle_data.get('brand_id'):
+            print("❌ [Backend] brand_id não fornecido")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Either brand_id or custom_brand must be provided"
+                detail="brand_id is required"
             )
 
-        # Validar lógica de model: ou usa catalog OU custom
+        # Validar se brand existe
+        brand = db.query(Brand).filter(Brand.id == vehicle_data['brand_id']).first()
+        if not brand:
+            print(f"❌ [Backend] Brand não encontrada: {vehicle_data['brand_id']}")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Brand with id {vehicle_data['brand_id']} not found"
+            )
+        print(f"✓ [Backend] Brand encontrada: {brand.name}")
+
+        # Validar model_id (obrigatório)
         print(f">>> [Backend] Validando model_id: {vehicle_data.get('model_id')}")
-        if vehicle_data.get('model_id'):
-            # Validar se model existe
-            model = db.query(Model).filter(Model.id == vehicle_data['model_id']).first()
-            if not model:
-                print(f"❌ [Backend] Model não encontrado: {vehicle_data['model_id']}")
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"Model with id {vehicle_data['model_id']} not found"
-                )
-            print(f"✓ [Backend] Model encontrado: {model.name}")
-        elif not vehicle_data.get('custom_model'):
-            print("❌ [Backend] Nem model_id nem custom_model fornecidos")
+        if not vehicle_data.get('model_id'):
+            print("❌ [Backend] model_id não fornecido")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Either model_id or custom_model must be provided"
+                detail="model_id is required"
             )
+
+        # Validar se model existe
+        model = db.query(Model).filter(Model.id == vehicle_data['model_id']).first()
+        if not model:
+            print(f"❌ [Backend] Model não encontrado: {vehicle_data['model_id']}")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Model with id {vehicle_data['model_id']} not found"
+            )
+        print(f"✓ [Backend] Model encontrado: {model.name}")
 
         # 1. Criar veículo
         print(">>> [Backend] [1/4] Criando registro de veículo...")
@@ -274,7 +275,19 @@ def get_vehicle(
 
     - **vehicle_id**: ID do veículo
     """
-    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
+    vehicle = (
+        db.query(Vehicle)
+        .options(
+            joinedload(Vehicle.brand),
+            joinedload(Vehicle.model),
+            joinedload(Vehicle.version),
+            joinedload(Vehicle.plates),
+            joinedload(Vehicle.vehicle_colors).joinedload(VehicleColor.color),
+            joinedload(Vehicle.covers),
+        )
+        .filter(Vehicle.id == vehicle_id)
+        .first()
+    )
 
     if not vehicle:
         raise HTTPException(

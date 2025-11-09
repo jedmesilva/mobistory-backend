@@ -267,6 +267,27 @@ class VehicleColor(VehicleColorBase):
     model_config = ConfigDict(from_attributes=True)
 
 
+# VehicleCover schemas
+class VehicleCoverBase(BaseModel):
+    vehicle_id: UUID
+    file_id: UUID
+    is_primary: bool = False
+    display_order: int = 0
+
+
+class VehicleCoverCreate(VehicleCoverBase):
+    pass
+
+
+class VehicleCover(VehicleCoverBase):
+    id: UUID
+    created_at: datetime
+    updated_at: datetime
+    image_url: Optional[str] = None  # Computed from file relationship
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 # Vehicle schemas
 class VehicleBase(BaseModel):
     vin: Optional[str] = None
@@ -274,9 +295,6 @@ class VehicleBase(BaseModel):
     brand_id: Optional[UUID] = None
     model_id: Optional[UUID] = None
     version_id: Optional[UUID] = None
-    custom_brand: Optional[str] = None
-    custom_model: Optional[str] = None
-    custom_version: Optional[str] = None
     manufacturing_year: Optional[int] = None
     model_year: Optional[int] = None
     current_color: Optional[str] = None
@@ -311,9 +329,6 @@ class VehicleUpdate(BaseModel):
     brand_id: Optional[UUID] = None
     model_id: Optional[UUID] = None
     version_id: Optional[UUID] = None
-    custom_brand: Optional[str] = None
-    custom_model: Optional[str] = None
-    custom_version: Optional[str] = None
     manufacturing_year: Optional[int] = None
     model_year: Optional[int] = None
     current_color: Optional[str] = None
@@ -337,5 +352,7 @@ class VehicleWithDetails(Vehicle):
     model: Optional[Model] = None
     version: Optional[ModelVersion] = None
     entity_links: List = []
+    covers: List['VehicleCover'] = []
+    primary_cover_url: Optional[str] = None  # Computed property from model
 
     model_config = ConfigDict(from_attributes=True)

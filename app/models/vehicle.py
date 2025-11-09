@@ -78,11 +78,6 @@ class Vehicle(Base, BaseModelWithUpdate):
     model_id = Column(PGUUID(as_uuid=True), ForeignKey("models.id"), nullable=True)
     version_id = Column(PGUUID(as_uuid=True), ForeignKey("model_versions.id"), nullable=True)
 
-    # Campos customizados (caso não encontre no catálogo)
-    custom_brand = Column(String, nullable=True)
-    custom_model = Column(String, nullable=True)
-    custom_version = Column(String, nullable=True)
-
     # Informações atuais do veículo
     manufacturing_year = Column(Integer, nullable=True)
     model_year = Column(Integer, nullable=True)
@@ -101,6 +96,30 @@ class Vehicle(Base, BaseModelWithUpdate):
     entity_links = relationship("Link", back_populates="vehicle")
     plates = relationship("Plate", back_populates="vehicle")
     vehicle_colors = relationship("VehicleColor", back_populates="vehicle")
+    covers = relationship("VehicleCover", back_populates="vehicle", order_by="VehicleCover.display_order")
+
+    @property
+    def primary_cover(self):
+        """Retorna a capa primária do veículo"""
+        try:
+            if hasattr(self, 'covers') and self.covers:
+                # Busca a capa marcada como primária
+                primary = next((c for c in self.covers if c.is_primary), None)
+                if primary:
+                    return primary
+                # Se não houver primária, retorna a primeira pela ordem
+                return self.covers[0] if self.covers else None
+        except Exception:
+            pass
+        return None
+
+    @property
+    def primary_cover_url(self):
+        """Retorna a URL da capa primária"""
+        primary = self.primary_cover
+        if primary:
+            return primary.image_url
+        return None
 
 
 class PlateModel(Base, BaseModelWithUpdate):

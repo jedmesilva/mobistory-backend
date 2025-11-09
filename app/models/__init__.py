@@ -11,6 +11,7 @@ from .entity import (
 from .entity_contact import EntityContact
 from .entity_name import EntityName
 from .vehicle import Vehicle, Brand, Model, ModelVersion, Plate, PlateType, PlateModel
+from .vehicle_cover import VehicleCover
 from .color import Color, VehicleColor
 from .message import Message, MessageType, SenderType
 from .file import File
@@ -39,6 +40,7 @@ __all__ = [
     "Plate",
     "PlateType",
     "PlateModel",
+    "VehicleCover",
     "Color",
     "VehicleColor",
     "Message",

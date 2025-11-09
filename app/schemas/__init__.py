@@ -18,6 +18,8 @@ from .vehicle import (
     ColorUpdate,
     VehicleColor,
     VehicleColorCreate,
+    VehicleCover,
+    VehicleCoverCreate,
     Plate,
     PlateCreate,
 )
@@ -69,6 +71,8 @@ __all__ = [
     "ColorUpdate",
     "VehicleColor",
     "VehicleColorCreate",
+    "VehicleCover",
+    "VehicleCoverCreate",
     "Plate",
     "PlateCreate",
     # Conversation Context
