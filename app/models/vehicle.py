@@ -78,12 +78,12 @@ class Vehicle(Base, BaseModelWithUpdate):
     model_id = Column(PGUUID(as_uuid=True), ForeignKey("models.id"), nullable=True)
     version_id = Column(PGUUID(as_uuid=True), ForeignKey("model_versions.id"), nullable=True)
 
-    # Informações atuais do veículo
+    # Informações atuais do veículo (FKs para dados normalizados)
     manufacturing_year = Column(Integer, nullable=True)
     model_year = Column(Integer, nullable=True)
-    current_color = Column(String, nullable=True)
-    current_plate = Column(String, nullable=True)
-    current_km = Column(Integer, nullable=True)
+    plate_id = Column(PGUUID(as_uuid=True), ForeignKey("plates.id"), nullable=True)  # Placa atual
+    vehicle_color_id = Column(PGUUID(as_uuid=True), ForeignKey("vehicle_colors.id"), nullable=True)  # Cor atual
+    mileage_id = Column(PGUUID(as_uuid=True), ForeignKey("mileage_records.id"), nullable=True)  # Quilometragem atual
 
     # Visibilidade e observações
     visibility = Column(String, default="private")  # private, public, restricted
@@ -94,9 +94,20 @@ class Vehicle(Base, BaseModelWithUpdate):
     model = relationship("Model", back_populates="vehicles")
     version = relationship("ModelVersion", back_populates="vehicles")
     entity_links = relationship("Link", back_populates="vehicle")
-    plates = relationship("Plate", back_populates="vehicle")
-    vehicle_colors = relationship("VehicleColor", back_populates="vehicle")
+    plates = relationship(
+        "Plate",
+        foreign_keys="Plate.vehicle_id"
+    )
+    vehicle_colors = relationship(
+        "VehicleColor",
+        foreign_keys="VehicleColor.vehicle_id"
+    )
     covers = relationship("VehicleCover", back_populates="vehicle", order_by="VehicleCover.display_order")
+    odometers = relationship("Odometer", back_populates="vehicle")
+    mileage_records = relationship(
+        "MileageRecord",
+        foreign_keys="MileageRecord.vehicle_id"
+    )
 
     @property
     def primary_cover(self):
@@ -119,6 +130,43 @@ class Vehicle(Base, BaseModelWithUpdate):
         primary = self.primary_cover
         if primary:
             return primary.image_url
+        return None
+
+    # Properties para compatibilidade com código legado (usando queries diretas)
+    @property
+    def current_plate(self):
+        """Retorna o número da placa atual"""
+        if self.plate_id:
+            from sqlalchemy.orm import object_session
+            session = object_session(self)
+            if session:
+                plate = session.query(Plate).filter(Plate.id == self.plate_id).first()
+                return plate.plate_number if plate else None
+        return None
+
+    @property
+    def current_color(self):
+        """Retorna a cor atual do veículo"""
+        if self.vehicle_color_id:
+            from sqlalchemy.orm import object_session
+            from .color import VehicleColor, Color
+            session = object_session(self)
+            if session:
+                vehicle_color = session.query(VehicleColor).filter(VehicleColor.id == self.vehicle_color_id).first()
+                if vehicle_color and vehicle_color.color:
+                    return vehicle_color.color.name
+        return None
+
+    @property
+    def current_km(self):
+        """Retorna a quilometragem atual"""
+        if self.mileage_id:
+            from sqlalchemy.orm import object_session
+            from .mileage import MileageRecord
+            session = object_session(self)
+            if session:
+                mileage = session.query(MileageRecord).filter(MileageRecord.id == self.mileage_id).first()
+                return mileage.mileage if mileage else None
         return None
 
 
@@ -188,7 +236,6 @@ class Plate(Base, BaseModelWithUpdate):
     active = Column(Boolean, default=True)
 
     # Relationships
-    vehicle = relationship("Vehicle", back_populates="plates")
     plate_type = relationship("PlateType", back_populates="plates")
     plate_model = relationship("PlateModel", back_populates="plates")
 

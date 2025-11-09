@@ -13,6 +13,7 @@ from .entity_name import EntityName
 from .vehicle import Vehicle, Brand, Model, ModelVersion, Plate, PlateType, PlateModel
 from .vehicle_cover import VehicleCover
 from .color import Color, VehicleColor
+from .mileage import MileageRecord, Odometer
 from .message import Message, MessageType, SenderType
 from .file import File
 from .conversation import (
@@ -43,6 +44,8 @@ __all__ = [
     "VehicleCover",
     "Color",
     "VehicleColor",
+    "MileageRecord",
+    "Odometer",
     "Message",
     "MessageType",
     "SenderType",
