@@ -81,13 +81,13 @@ def create_anonymous_entity(
     - locale: Device locale
     - geolocation: Optional geolocation data
     """
-    print(f"🔵 [BACKEND] Criando entidade anônima: {entity_data.name}")
-    print(f"🔵 [BACKEND] Device fingerprint: {entity_data.device_fingerprint.get('deviceId', 'N/A')}")
+    print(f"[BACKEND] Criando entidade anônima: {entity_data.name}")
+    print(f"[BACKEND] Device fingerprint: {entity_data.device_fingerprint.get('deviceId', 'N/A')}")
 
     service = EntityService(db)
     entity = service.create_anonymous_entity(entity_data)
 
-    print(f"✅ [BACKEND] Entidade anônima criada! ID: {entity.id}, Code: {entity.entity_code}")
+    print(f"[BACKEND] Entidade anônima criada! ID: {entity.id}, Code: {entity.entity_code}")
     return entity
 
 
