@@ -108,6 +108,7 @@ class Vehicle(Base, BaseModelWithUpdate):
         "MileageRecord",
         foreign_keys="MileageRecord.vehicle_id"
     )
+    events = relationship("VehicleEvent", back_populates="vehicle", order_by="VehicleEvent.event_timestamp.desc()")
 
     @property
     def primary_cover(self):

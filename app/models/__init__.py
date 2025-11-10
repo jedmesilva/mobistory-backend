@@ -24,6 +24,7 @@ from .conversation import (
 )
 from .permission import Permission
 from .link_type_permission import LinkTypePermission
+from .vehicle_event import VehicleEvent
 
 __all__ = [
     "Entity",
@@ -58,4 +59,5 @@ __all__ = [
     "ConversationMessage",
     "Permission",
     "LinkTypePermission",
+    "VehicleEvent",
 ]
