@@ -22,6 +22,8 @@ from .conversation import (
     ConversationParticipant,
     ConversationMessage,
 )
+from .permission import Permission
+from .link_type_permission import LinkTypePermission
 
 __all__ = [
     "Entity",
@@ -54,4 +56,6 @@ __all__ = [
     "Conversation",
     "ConversationParticipant",
     "ConversationMessage",
+    "Permission",
+    "LinkTypePermission",
 ]

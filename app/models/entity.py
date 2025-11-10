@@ -145,17 +145,19 @@ class EntityRelationship(Base, BaseModelWithUpdate):
 
 
 class LinkType(Base, BaseModel):
-    """Tipos de vínculos (proprietário, condutor autorizado, etc.)"""
+    """Tipos de vínculos (proprietário, condutor autorizado, etc.)
+    Permissões agora definidas em link_type_permissions
+    """
     __tablename__ = "link_types"
 
     code = Column(String, unique=True, nullable=False)
     name = Column(String, nullable=False)
     description = Column(Text, nullable=True)
-    permissions = Column(JSONB, nullable=True)
     active = Column(Boolean, default=True)
 
     # Relationships
     links = relationship("Link", back_populates="link_type")
+    link_type_permissions = relationship("LinkTypePermission", back_populates="link_type", cascade="all, delete-orphan")
 
 
 class Link(Base, BaseModelWithUpdate):
